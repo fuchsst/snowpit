@@ -4,11 +4,17 @@ package at.willhaben.dt.snowpit.view.model
 import at.willhaben.dt.snowpit.service.model.DtSpecYaml
 import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifier
 import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierAttribute
-import tornadofx.*
+import tornadofx.ItemViewModel
+import tornadofx.onChange
+import tornadofx.toProperty
 
-class DtSpecYamlViewModel(private val yaml: DtSpecYaml) : ItemViewModel<DtSpecYaml>(yaml) {
-    val version = bind { item?.version?.toProperty() }
-    val identifiers = bind { item?.identifiers?.toProperty() }
+class DtSpecYamlViewModel(val filename: String, private val yaml: DtSpecYaml) : ItemViewModel<DtSpecYaml>(yaml) {
+
+    val version = bind { item?.version?.toProperty() }.onChange { println("$filename $it") }
+    val description = bind { item?.description?.toProperty() }.onChange { println("$filename $it") }
+    //val identifiers = bind { item?.identifiers?.toProperty() }
+
+
 }
 
 class DtSpecYamlIdentifierViewModel(private val dtSpecIdentifier: DtSpecYamlIdentifier) : ItemViewModel<DtSpecYamlIdentifier>(dtSpecIdentifier) {

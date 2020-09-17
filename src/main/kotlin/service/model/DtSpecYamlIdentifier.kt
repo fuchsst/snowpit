@@ -1,6 +1,6 @@
 package at.willhaben.dt.snowpit.service.model
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class DtSpecYamlIdentifier(
@@ -11,11 +11,11 @@ data class DtSpecYamlIdentifier(
 @Serializable
 data class DtSpecYamlIdentifierAttribute(
         val field: String,
-        val generator:DtSpecYamlIdentifierGenerator
+        val generator: DtSpecYamlIdentifierGenerator
 )
 
 @Serializable
-enum class DtSpecYamlIdentifierGenerator{
+enum class DtSpecYamlIdentifierGenerator {
     unique_string,
     unique_integer
 }

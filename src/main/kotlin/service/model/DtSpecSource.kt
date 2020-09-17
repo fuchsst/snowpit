@@ -22,6 +22,6 @@ data class DtSpecItentifierMap(
 
 @Serializable
 data class DtSpecSourceIdentifierMapping(
-        val name:String,
+        val name: String,
         val attribute: String
 )

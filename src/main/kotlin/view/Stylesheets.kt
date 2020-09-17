@@ -1,6 +1,5 @@
 package at.willhaben.dt.snowpit.view
 
-import tornadofx.CssBox
 import tornadofx.Stylesheet
 import tornadofx.px
 
