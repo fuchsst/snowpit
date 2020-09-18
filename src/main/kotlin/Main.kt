@@ -14,6 +14,10 @@ class Snowpit : App(Image("icon/app_icon.png"), MainFormView::class, GlobalStyle
         reloadStylesheetsOnFocus()
     }
 
+    override fun stop() {
+        super.stop()
+        /* Do your shutdown routine here  */
+    }
 }
 
 fun main() {

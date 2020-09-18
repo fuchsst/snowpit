@@ -8,13 +8,13 @@ class DtSpecYamlService {
 
     fun loadDtSpecYaml(file: File): DtSpecYaml {
         val ymlText = file.bufferedReader().readText()
-        return Yaml.default.parse(DtSpecYaml.serializer(), ymlText)
+        return Yaml.default.decodeFromString(DtSpecYaml.serializer(), ymlText)
     }
 
 
     fun saveDtSpecYaml(file: File, dtSpecYaml: DtSpecYaml) {
         file.bufferedWriter().use {
-            val ymlText = Yaml.default.stringify(DtSpecYaml.serializer(), dtSpecYaml)
+            val ymlText = Yaml.default.encodeToString(DtSpecYaml.serializer(), dtSpecYaml)
             it.write(ymlText)
         }
 

@@ -12,14 +12,14 @@ class DtSpecYamlViewModel(val filename: String, private val yaml: DtSpecYaml) : 
 
     val version = bind { item?.version?.toProperty() }.onChange { println("$filename $it") }
     val description = bind { item?.description?.toProperty() }.onChange { println("$filename $it") }
-    //val identifiers = bind { item?.identifiers?.toProperty() }
+    val identifiers = bind { item?.identifiers?.map { DtSpecYamlIdentifierViewModel(it) }.toProperty() }
 
 
 }
 
 class DtSpecYamlIdentifierViewModel(private val dtSpecIdentifier: DtSpecYamlIdentifier) : ItemViewModel<DtSpecYamlIdentifier>(dtSpecIdentifier) {
     val identifier = bind { item?.identifier?.toProperty() }
-    val attributes = bind { item?.attributes?.toProperty() }
+    val attributes = bind { item?.attributes?.map { DtSpecYamlIdentifierAttributeViewModel(it) }.toProperty() }
 }
 
 class DtSpecYamlIdentifierAttributeViewModel(private val dtSpecAttribute: DtSpecYamlIdentifierAttribute) : ItemViewModel<DtSpecYamlIdentifierAttribute>(dtSpecAttribute) {
