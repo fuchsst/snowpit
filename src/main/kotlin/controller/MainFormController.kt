@@ -1,6 +1,7 @@
 package at.willhaben.dt.snowpit.controller
 
 
+import at.willhaben.dt.snowpit.converter.convert
 import at.willhaben.dt.snowpit.service.DtSpecYamlService
 import at.willhaben.dt.snowpit.service.model.DtSpecYaml
 import at.willhaben.dt.snowpit.view.model.DtSpecYamlViewModel
@@ -12,19 +13,14 @@ import java.io.File
 class MainFormController : Controller() {
 
     private val dtSpecYamlService = DtSpecYamlService()
-    //val yaml = DtSpecYamlViewModel(dtSpecYamlService.memberList).members
 
-    fun newFile(filename: String) =
-            DtSpecYamlViewModel(
-                    filename = filename,
-                    yaml = DtSpecYaml(
-                            description = "DtSpec Test Specification",
-                            identifiers = emptyList(),
-                            sources = emptyList(),
-                            targets = emptyList(),
-                            scenarios = emptyList()
-                    )
-            )
+    fun newFile(filename: String) = DtSpecYaml(
+            description = "DtSpec Test Specification",
+            identifiers = mutableListOf(),
+            sources = mutableListOf(),
+            targets = mutableListOf(),
+            scenarios = mutableListOf()
+    ).convert(filename)
 
     fun openFile(): DtSpecYamlViewModel? {
         val fileChooser = FileChooser().apply {
@@ -35,7 +31,7 @@ class MainFormController : Controller() {
         val file = fileChooser.showOpenDialog(null)
         return if (file != null) {
             val dtSpecYaml = dtSpecYamlService.loadDtSpecYaml(file)
-            DtSpecYamlViewModel(file.name, dtSpecYaml)
+            dtSpecYaml.convert(file.name)
         } else {
             null
         }
@@ -54,7 +50,7 @@ class MainFormController : Controller() {
             File(dtSpecYamlViewModel.filename)
         }
         if (file != null)
-            dtSpecYamlService.saveDtSpecYaml(file, dtSpecYamlViewModel.item)
+            dtSpecYamlViewModel.convert()
     }
 
     fun quitApp() {

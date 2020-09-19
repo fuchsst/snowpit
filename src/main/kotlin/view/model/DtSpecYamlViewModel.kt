@@ -1,28 +1,31 @@
 package at.willhaben.dt.snowpit.view.model
 
 
-import at.willhaben.dt.snowpit.service.model.DtSpecYaml
-import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifier
-import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierAttribute
-import tornadofx.ItemViewModel
-import tornadofx.onChange
-import tornadofx.toProperty
+import javafx.beans.property.SimpleListProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.collections.ObservableList
+import tornadofx.getValue
+import tornadofx.setValue
 
-class DtSpecYamlViewModel(val filename: String, private val yaml: DtSpecYaml) : ItemViewModel<DtSpecYaml>(yaml) {
+class DtSpecYamlViewModel(filename: String,
+                          version: String,
+                          description: String?,
+                          identifiers: ObservableList<DtSpecIdentifierViewModel>,
+                          sources: ObservableList<DtSpecSourceViewModel>,
+                          targets: ObservableList<DtSpecTargetViewModel>) {
 
-    val version = bind { item?.version?.toProperty() }.onChange { println("$filename $it") }
-    val description = bind { item?.description?.toProperty() }.onChange { println("$filename $it") }
-    val identifiers = bind { item?.identifiers?.map { DtSpecYamlIdentifierViewModel(it) }.toProperty() }
+    val filenameProperty = SimpleStringProperty(filename)
+    val versionProperty = SimpleStringProperty(version)
+    val descriptionProperty = SimpleStringProperty(description)
+    val identifiersProperty = SimpleListProperty(identifiers)
+    val sourcesProperty = SimpleListProperty(sources)
+    val targetsProperty = SimpleListProperty(targets)
 
+    var filename by filenameProperty
+    var version by versionProperty
+    var description by descriptionProperty
+    var identifiers by identifiersProperty
+    var sources by sourcesProperty
+    var targets by targetsProperty
 
-}
-
-class DtSpecYamlIdentifierViewModel(private val dtSpecIdentifier: DtSpecYamlIdentifier) : ItemViewModel<DtSpecYamlIdentifier>(dtSpecIdentifier) {
-    val identifier = bind { item?.identifier?.toProperty() }
-    val attributes = bind { item?.attributes?.map { DtSpecYamlIdentifierAttributeViewModel(it) }.toProperty() }
-}
-
-class DtSpecYamlIdentifierAttributeViewModel(private val dtSpecAttribute: DtSpecYamlIdentifierAttribute) : ItemViewModel<DtSpecYamlIdentifierAttribute>(dtSpecAttribute) {
-    val field = bind { item?.field?.toProperty() }
-    val generator = bind { item?.generator?.toProperty() }
 }

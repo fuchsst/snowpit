@@ -1,0 +1,111 @@
+version: '0.1'
+
+identifiers:
+  - identifier: id_gen1
+    attributes:
+      - field: id
+        generator: unique_integer
+      - field: uuid
+        generator: unique_string
+  - identifier: id_gen2
+    attributes:
+      - field: id
+        generator: unique_integer
+
+sources:
+  - source: db_schema.table1
+    identifier_map:
+      - column: id
+        identifier:
+          name: id_gen1
+          attribute: id
+      - column: code
+        identifier:
+          name: id_gen1
+          attribute: uuid
+
+  - source: db_schema.table2
+    identifier_map:
+      - column: id1
+        identifier:
+          name: id_gen1
+          attribute: id
+      - column: id2
+        identifier:
+          name: id_gen2
+          attribute: id
+
+targets:
+  - target: db_schema.table3
+    identifier_map:
+      - column: code
+        identifier:
+          name: id_gen1
+          attribute: uuid
+
+scenarios:
+  - scenario: Some sample scenario
+    cases:
+      - case: >
+          First Testcase in scenario
+        factory:
+          data:
+            - source: db_schema.table1
+              table: |
+                | id      | code    | numberic_field | string_field | time_field                |
+                | -       | -       | -              | -            | -                         |
+                | tbl1id1 | tbl1id1 | 100            | STR1         | 2020-01-02 00:00:00+00:00 |
+                | tbl1id2 | tbl1id2 | 123.45         | STR1         | 2020-01-01 12:00:00+00:00 |
+                | tbl1id3 | tbl1id3 | -1.0           | STR2         | 2020-02-01 23:59:59+00:00 |
+                | tbl1id4 | tbl1id4 | 0              | STR3         | 2020-03-02 01:23:45+00:00 |
+
+        expected:
+          data:
+            - target: db_schema.table3
+              table: |
+                | key   | load_ts                   | source_system | last_seen_ts              | last_seen_system |
+                | -     | -                         | -             | -                         | -                |
+                | user1 | 2020-01-02 12:05:05+00:00 | IOS           | 2020-01-02 18:05:00+00:00 | BBX              |
+                | user2 | 2020-01-05 03:04:05+00:00 | IOS           | 2020-01-10 03:04:05+00:00 | IOS              |
+                | user3 | 2020-01-05 03:04:05+00:00 | ANDROID       | 2020-01-05 03:04:05+00:00 | ANDROID          |
+              by:
+                - key
+            - target: dwh_dv_test_core.h_test_ad
+              table: |
+                | key   | load_ts                   | source_system | last_seen_ts              | last_seen_system |
+                | -     | -                         | -             | -                         | -                |
+                | ad1   | 2020-01-02 12:05:05+00:00 | IOS           | 2020-01-10 03:04:05+00:00 | IOS              |
+                | ad2   | 2020-01-02 03:04:05+00:00 | IOS           | 2020-01-02 12:05:08+00:00 | IOS              |
+                | ad3   | 2020-01-02 12:05:10+00:00 | IOS           | 2020-01-02 12:05:10+00:00 | IOS              |
+              by:
+                - key
+      - case: >
+          If a key already exists, the last seen_ts and last_seen_system are updated, but only if the timestamp in the source is newer
+          Keys not yet present are inserted without dublicates as described in the initial load test
+        factory:
+          data:
+            - source: db_schema.table1
+              table: |
+                | key   | load_ts                   | source_system | last_seen_ts              | last_seen_system |
+                | -     | -                         | -             | -                         | -                |
+                | ad1   | 2020-01-02 12:05:05+00:00 | IOS           | 2020-01-10 03:04:05+00:00 | IOS              |
+                | ad2   | 2020-01-02 03:04:05+00:00 | IOS           | 2020-01-02 12:05:08+00:00 | IOS              |
+                | ad3   | 2020-01-02 12:05:10+00:00 | IOS           | 2020-01-02 12:05:10+00:00 | IOS              |
+            - source: db_schema.table2
+              table: |
+                | key     | load_ts                   | source_system | last_seen_ts              | last_seen_system |
+                | -       | -                         | -             | -                         | -                |
+                | user2   | 2020-01-02 03:04:05+00:00 | IOS           | 2020-01-02 12:05:08+00:00 | IOS              |
+                | user3   | 2020-01-02 12:05:10+00:00 | IOS           | 2020-01-02 12:05:10+00:00 | IOS              |
+        expected:
+          data:
+            - target: db_schema.table3
+              table: |
+                | key   | load_ts                   | source_system | last_seen_ts              | last_seen_system |
+                | -     | -                         | -             | -                         | -                |
+                | user1 | 2020-01-02 12:05:07+00:00 | IOS           | 2020-01-02 12:05:07+00:00 | IOS              |
+                | user2 | 2020-01-02 03:04:05+00:00 | IOS           | 2020-01-02 12:05:08+00:00 | IOS              |
+                | user3 | 2020-01-02 12:05:10+00:00 | IOS           | 2020-01-05 03:04:05+00:00 | ANDROID          |
+                | user4 | 2020-01-02 03:04:05+00:00 | IOS           | 2020-03-03 01:02:03+00:00 | ANDROID          |
+              by:
+                - key

@@ -4,15 +4,14 @@ package at.willhaben.dt.snowpit.view
 import at.willhaben.dt.snowpit.controller.MainFormController
 import at.willhaben.dt.snowpit.view.model.DtSpecYamlViewModel
 import javafx.scene.control.TabPane
-import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import tornadofx.*
 
-class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Image("icon/app_icon.png"))) {
+class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIcon)) {
 
     private val controller: MainFormController by inject()
 
-    val tabPane = TabPane()
+    val tabPane = TabPane().apply { fitToParentWidth() }
 
 
     override val root = form {
@@ -20,31 +19,31 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Image("icon/
 
         menubar {
             menu("File") {
-               item(name = "New", keyCombination = "Shortcut+N", graphic = ImageView(Image("icon/new.png"))).action {
-                   menuItemNewHandler()
-               }
+                item(name = "New", keyCombination = "Shortcut+N", graphic = ImageView(Icons.IconNew)).action {
+                    menuItemNewHandler()
+                }
 
-                item(name = "Open", keyCombination = "Shortcut+O", graphic = ImageView(Image("icon/open.png"))).action {
+                item(name = "Open", keyCombination = "Shortcut+O", graphic = ImageView(Icons.IconOpen)).action {
                     menuItemOpenHandler()
                 }
 
-                item(name = "Save", keyCombination = "Shortcut+S", graphic = ImageView(Image("icon/save.png"))).action {
+                item(name = "Save", keyCombination = "Shortcut+S", graphic = ImageView(Icons.IconSave)).action {
                     menuItemSaveHandler()
                 }
 
-                item(name = "Save as ...", keyCombination = "Shift+Shortcut+N", graphic = ImageView(Image("icon/save-as.png"))).action {
+                item(name = "Save as ...", keyCombination = "Shift+Shortcut+N", graphic = ImageView(Icons.IconSaveAs)).action {
                     menuItemSaveAsHandler()
                 }
 
                 separator()
 
-                item(name = "Preferences", keyCombination = "Shortcut+P", graphic = ImageView(Image("icon/gear.png"))).action {
+                item(name = "Preferences", keyCombination = "Shortcut+P", graphic = ImageView(Icons.IconPreferences)).action {
                     menuItemPreferencesHandler()
                 }
 
                 separator()
 
-                item(name = "Quit", keyCombination = "Shortcut+Q", graphic = ImageView(Image("icon/close.png"))).action {
+                item(name = "Quit", keyCombination = "Shortcut+Q", graphic = ImageView(Icons.IconClose)).action {
                     menuItemCloseHandler()
                 }
 
@@ -56,39 +55,45 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Image("icon/
                 }
             }
         }
-        hbox {
-            button {
-                graphic = ImageView(Image("icon/new.png"))
-                tooltip("New")
-            }.action { menuItemNewHandler() }
+        vbox {
+            fitToParentWidth()
+            hbox {
 
-            button {
-                graphic = ImageView(Image("icon/open.png"))
-                tooltip("Open DtSpec Yaml...")
-            }.action { menuItemOpenHandler() }
+                buttonbar {
+                    button {
+                        graphic = ImageView(Icons.IconNew)
+                        tooltip("New")
+                    }.action { menuItemNewHandler() }
 
-            button {
-                graphic = ImageView(Image("icon/save.png"))
-                tooltip("Save")
-            }.action { menuItemSaveHandler() }
+                    button {
+                        graphic = ImageView(Icons.IconOpen)
+                        tooltip("Open DtSpec Yaml...")
+                    }.action { menuItemOpenHandler() }
 
-            button {
-                graphic = ImageView(Image("icon/save-as.png"))
-                tooltip("Save as...")
-            }.action { menuItemSaveAsHandler() }
+                    button {
+                        graphic = ImageView(Icons.IconSave)
+                        tooltip("Save")
+                    }.action { menuItemSaveHandler() }
 
-            button {
-                graphic = ImageView(Image("icon/gear.png"))
-                tooltip("Preferences...")
+                    button {
+                        graphic = ImageView(Icons.IconSaveAs)
+                        tooltip("Save as...")
+                    }.action { menuItemSaveAsHandler() }
+
+                    button {
+                        graphic = ImageView(Icons.IconPreferences)
+                        tooltip("Preferences...")
+                    }
+
+                    button {
+                        graphic = ImageView(Icons.IconClose)
+                        tooltip("Close")
+                    }.action { menuItemCloseHandler() }
+                }
+
             }
-
-            button {
-                graphic = ImageView(Image("icon/close.png"))
-                tooltip("Close")
-            }.action { menuItemCloseHandler() }
+            this += tabPane.apply { fitToParentSize() }
         }
-        this += tabPane.apply { fitToParentSize() }
-
     }
 
     private fun menuItemCloseHandler() {

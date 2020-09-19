@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DtSpecYaml(
         var version: String = "0.1",
-        val description: String?,
-        val identifiers: List<DtSpecYamlIdentifier>?,
-        val sources: List<DtSpecSource>?,
-        val targets: List<DtSpecTarget>?,
-        val scenarios: List<DtSpecScenario>?
+        val description: String? = null,
+        val identifiers: List<DtSpecYamlIdentifier> = emptyList(),
+        val sources: List<DtSpecYamlSource> = emptyList(),
+        val targets: List<DtSpecYamlTarget> = emptyList(),
+        val scenarios: List<DtSpecScenario> = emptyList()
 )
