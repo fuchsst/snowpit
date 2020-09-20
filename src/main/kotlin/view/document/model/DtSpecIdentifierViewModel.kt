@@ -1,11 +1,10 @@
-package at.willhaben.dt.snowpit.view.model
+package at.willhaben.dt.snowpit.view.document.model
 
 
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
-import tornadofx.getValue
-import tornadofx.setValue
+import tornadofx.*
 
 
 class DtSpecIdentifierViewModel(identifier: String,

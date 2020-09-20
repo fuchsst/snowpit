@@ -4,9 +4,9 @@ import at.willhaben.dt.snowpit.service.model.DtSpecYaml
 import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifier
 import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierAttribute
 import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierGenerator
-import at.willhaben.dt.snowpit.view.model.DtSpecIdentifierAttributeViewModel
-import at.willhaben.dt.snowpit.view.model.DtSpecIdentifierViewModel
-import at.willhaben.dt.snowpit.view.model.DtSpecYamlViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecYamlViewModel
 
 fun DtSpecYamlViewModel.convert() = DtSpecYaml(
         version = this.version,

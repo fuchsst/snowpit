@@ -1,7 +1,6 @@
 package at.willhaben.dt.snowpit.view
 
-import tornadofx.Stylesheet
-import tornadofx.px
+import tornadofx.*
 
 class GlobalStylesheet : Stylesheet() {
 

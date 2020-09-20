@@ -2,7 +2,8 @@ package at.willhaben.dt.snowpit.view
 
 
 import at.willhaben.dt.snowpit.controller.MainFormController
-import at.willhaben.dt.snowpit.view.model.DtSpecYamlViewModel
+import at.willhaben.dt.snowpit.view.document.fragments.DtSpecDocumentFragment
+import at.willhaben.dt.snowpit.view.document.model.DtSpecYamlViewModel
 import javafx.scene.control.TabPane
 import javafx.scene.image.ImageView
 import tornadofx.*
@@ -126,7 +127,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
         if (dtSpecYamlViewModel != null) {
             val newTab = tabPane.tab("<${dtSpecYamlViewModel.filename}> *")
             newTab.userData = dtSpecYamlViewModel
-            newTab.add(DtSpecYamlFragment(dtSpecYamlViewModel))
+            newTab.add(DtSpecDocumentFragment(dtSpecYamlViewModel))
             newTab.select()
         }
     }
@@ -136,7 +137,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
         val dtSpecYamlViewModel = controller.newFile("$name.yml")
         val newTab = tabPane.tab("<$name> *")
         newTab.userData = dtSpecYamlViewModel
-        newTab.add(DtSpecYamlFragment(dtSpecYamlViewModel))
+        newTab.add(DtSpecDocumentFragment(dtSpecYamlViewModel))
         newTab.select()
     }
 }

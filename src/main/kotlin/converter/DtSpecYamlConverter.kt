@@ -1,8 +1,8 @@
 package at.willhaben.dt.snowpit.converter
 
 import at.willhaben.dt.snowpit.service.model.*
-import at.willhaben.dt.snowpit.view.model.*
-import tornadofx.asObservable
+import at.willhaben.dt.snowpit.view.document.model.*
+import tornadofx.*
 
 fun DtSpecYaml.convert(filename: String) = DtSpecYamlViewModel(
         filename = filename,

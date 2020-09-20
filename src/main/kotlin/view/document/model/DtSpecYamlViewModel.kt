@@ -1,18 +1,17 @@
-package at.willhaben.dt.snowpit.view.model
+package at.willhaben.dt.snowpit.view.document.model
 
 
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
-import tornadofx.getValue
-import tornadofx.setValue
+import tornadofx.*
 
 class DtSpecYamlViewModel(filename: String,
                           version: String,
                           description: String?,
                           identifiers: ObservableList<DtSpecIdentifierViewModel>,
                           sources: ObservableList<DtSpecSourceViewModel>,
-                          targets: ObservableList<DtSpecTargetViewModel>) {
+                          targets: ObservableList<DtSpecTargetViewModel>) : ViewModel() {
 
     val filenameProperty = SimpleStringProperty(filename)
     val versionProperty = SimpleStringProperty(version)

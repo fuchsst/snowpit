@@ -4,10 +4,10 @@ package at.willhaben.dt.snowpit.controller
 import at.willhaben.dt.snowpit.converter.convert
 import at.willhaben.dt.snowpit.service.DtSpecYamlService
 import at.willhaben.dt.snowpit.service.model.DtSpecYaml
-import at.willhaben.dt.snowpit.view.model.DtSpecYamlViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecYamlViewModel
 import javafx.application.Platform
 import javafx.stage.FileChooser
-import tornadofx.Controller
+import tornadofx.*
 import java.io.File
 
 class MainFormController : Controller() {
@@ -50,7 +50,7 @@ class MainFormController : Controller() {
             File(dtSpecYamlViewModel.filename)
         }
         if (file != null)
-            dtSpecYamlViewModel.convert()
+            dtSpecYamlService.saveDtSpecYaml(file, dtSpecYamlViewModel.convert())
     }
 
     fun quitApp() {
