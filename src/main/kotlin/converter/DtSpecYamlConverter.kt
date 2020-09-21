@@ -8,14 +8,14 @@ fun DtSpecYaml.convert(filename: String) = DtSpecYamlViewModel(
         filename = filename,
         version = this.version,
         description = this.description,
-        identifiers = this.identifiers.map { it.convert() }.asObservable(),
-        sources = this.sources.map { it.convert() }.asObservable(),
-        targets = this.targets.map { it.convert() }.asObservable(),
+        identifiers = this.identifiers.map { it.convert() }.toMutableList().asObservable(),
+        sources = this.sources.map { it.convert() }.toMutableList().asObservable(),
+        targets = this.targets.map { it.convert() }.toMutableList().asObservable(),
 )
 
 fun DtSpecYamlIdentifier.convert() = DtSpecIdentifierViewModel(
         identifier = this.identifier,
-        attributes = this.attributes.map { it.convert() }.asObservable()
+        attributes = this.attributes.map { it.convert() }.toMutableList().asObservable()
 )
 
 fun DtSpecYamlIdentifierAttribute.convert() = DtSpecIdentifierAttributeViewModel(
@@ -25,12 +25,12 @@ fun DtSpecYamlIdentifierAttribute.convert() = DtSpecIdentifierAttributeViewModel
 
 fun DtSpecYamlSource.convert() = DtSpecSourceViewModel(
         source = this.source,
-        identifierMap = this.identifier_map.map { it.convert() }.asObservable()
+        identifierMap = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
 )
 
 fun DtSpecYamlTarget.convert() = DtSpecTargetViewModel(
         target = this.target,
-        identifierMap = this.identifier_map.map { it.convert() }.asObservable()
+        identifierMap = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
 )
 
 fun DtSpecItentifierMap.convert() = DtSpecSourceIdentifierMapViewModel(

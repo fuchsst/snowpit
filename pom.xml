@@ -25,7 +25,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <kotlin.version>1.4.10</kotlin.version>
-        <tornadofx.version>1.7.20</tornadofx.version>
+        <tornadofx.version>2.0.0-SNAPSHOT</tornadofx.version>
         <javafx-controls.version>16-ea+1</javafx-controls.version>
         <controlsfx.version>11.0.2</controlsfx.version>
         <assertj-core.version>3.17.2</assertj-core.version>
@@ -237,5 +237,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

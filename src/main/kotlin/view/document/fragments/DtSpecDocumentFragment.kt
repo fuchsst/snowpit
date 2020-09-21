@@ -15,6 +15,8 @@ class DtSpecDocumentFragment(dtSpecYamlViewModel: DtSpecYamlViewModel) : Fragmen
         val fragmentScope = Scope()
         setInScope(dtSpecYamlViewModel, fragmentScope)
 
+        fitToParentSize()
+
         vbox(spacing = 16) {
             fitToParentWidth()
             hbox(spacing = 8) {
@@ -33,8 +35,12 @@ class DtSpecDocumentFragment(dtSpecYamlViewModel: DtSpecYamlViewModel) : Fragmen
             }
 
             drawer(side = Side.LEFT, multiselect = true) {
-                item("Identifier", expanded = true) {                    this += find<IdentifierFragment>(fragmentScope)                }
-                item("Sources", expanded = true) {                    this += find<SourceFragment>(fragmentScope)                }
+                fitToParentSize()
+                item("Identifier", expanded = true) {
+                    fitToParentSize()
+                    this += find<IdentifierFragment>(fragmentScope)
+                }
+                item("Sources", expanded = true) { this += find<SourceFragment>(fragmentScope) }
 
                 item("Targets", expanded = true) {
                     hbox {

@@ -1,11 +1,13 @@
 package at.willhaben.dt.snowpit.view.document.fragments
 
 import at.willhaben.dt.snowpit.controller.IdentifierController
+import at.willhaben.dt.snowpit.service.isValidFieldName
 import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierGenerator
 import at.willhaben.dt.snowpit.view.Icons
 import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeViewModel
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.geometry.Insets
 import javafx.scene.image.ImageView
 import tornadofx.*
 
@@ -15,7 +17,7 @@ class IdentifierFragment : Fragment() {
 
 
     private val selectedIdentifierName = SimpleStringProperty()
-    private val selectedIdentifierAttribute = SimpleObjectProperty<DtSpecIdentifierAttributeViewModel>()
+
 
     override val root = hbox {
         vbox {
@@ -26,7 +28,7 @@ class IdentifierFragment : Fragment() {
             }
             button(graphic = ImageView(Icons.IconRemoveIdentifier)) {
                 tooltip("Remove Identifier")
-                enableWhen { controller.selectedIdentifier.isNotNull }
+                enableWhen { controller.selectedIdentifier.isNotNull  }
             }.action {
                 controller.removeIdentifier()
             }
@@ -41,10 +43,13 @@ class IdentifierFragment : Fragment() {
             }
 
             vbox {
+                paddingAll = 8.0
                 visibleWhen { controller.selectedIdentifier.isNotNull }
                 hbox {
                     label(text = "Identifier Name: ")
-                    val identifierNameTextfield = textfield()
+                    val identifierNameTextfield = textfield() {
+                        filterInput { it.controlNewText.isValidFieldName() }
+                    }
 
                     identifiersListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->
                         if (oldItem != null) {
@@ -62,29 +67,39 @@ class IdentifierFragment : Fragment() {
                             tooltip("Add ID Generator")
 
                         }.action {
-
-                            controller.selectedIdentifierAttributeList.add(
-                                    DtSpecIdentifierAttributeViewModel(
-                                            field = "field ${controller.dtSpecYamlViewModel.identifiers.size}",
-                                            generator = DtSpecYamlIdentifierGenerator.unique_integer.name
-                                    )
-                            )
+                            controller.addAttribute()
                         }
                         button(graphic = ImageView(Icons.IconRemoveCounter)) {
                             tooltip("Remove ID Generator")
-                            enableWhen { selectedIdentifierAttribute.isNotNull }
+                            enableWhen { controller.selectedIdentifierAttribute.isNotNull }
+                        }.action {
+                            controller.removeAttribute()
                         }
                     }
-                    tableview<DtSpecIdentifierAttributeViewModel> {
+                    val identifierAttributesTable = tableview<DtSpecIdentifierAttributeViewModel> {
+                        prefWidth = 768.0
                         //table = editModel
                         isEditable = true
                         //columnResizePolicy = SmartResize.POLICY
-                        column("Field", DtSpecIdentifierAttributeViewModel::field).makeEditable()
-                        column("Generator", DtSpecIdentifierAttributeViewModel::generator)
-                                .useComboBox(DtSpecYamlIdentifierGenerator.values().map { it.name }.toList().asObservable())
+                        column("Field", DtSpecIdentifierAttributeViewModel::field) {
+                            remainingWidth()
+                        }.makeEditable()
+                        column("Generator", DtSpecIdentifierAttributeViewModel::generator) {
+                            prefWidth = 256.0
+                        }.useComboBox(DtSpecYamlIdentifierGenerator.values().map { it.name }.toList().asObservable())
 
-                        bindSelected(selectedIdentifierAttribute)
+                        bindSelected(controller.selectedIdentifierAttribute)
+                        columnResizePolicy = SmartResize.POLICY
+                    }
 
+                    identifiersListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->
+                        if (oldItem != null) {
+                            identifierAttributesTable.itemsProperty().unbindBidirectional(oldItem.attributesProperty)
+
+                        }
+                        if (newItem != null) {
+                            identifierAttributesTable.itemsProperty().bindBidirectional(newItem.attributesProperty)
+                        }
                     }
                     //tableview(items=selectedIdentifier.a) {  }
                 }
