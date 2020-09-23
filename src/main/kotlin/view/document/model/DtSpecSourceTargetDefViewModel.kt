@@ -8,27 +8,27 @@ import tornadofx.*
 
 
 class DtSpecSourceViewModel(source: String,
-                            identifierMap: ObservableList<DtSpecSourceIdentifierMapViewModel>) {
+                            columnIdentifierMapping: ObservableList<DtSpecColumnIdentifierMappingViewModel>) {
 
     val sourceProperty = SimpleStringProperty(source)
-    val identifierMapProperty = SimpleListProperty(identifierMap)
+    val identifierMapProperty = SimpleListProperty(columnIdentifierMapping)
 
     var source by sourceProperty
     var identifierMap by identifierMapProperty
 }
 
 class DtSpecTargetViewModel(target: String,
-                            identifierMap: ObservableList<DtSpecSourceIdentifierMapViewModel>) {
+                            columnIdentifierMapping: ObservableList<DtSpecColumnIdentifierMappingViewModel>) {
 
     val targetProperty = SimpleStringProperty(target)
-    val identifierMapProperty = SimpleListProperty(identifierMap)
+    val identifierMapProperty = SimpleListProperty(columnIdentifierMapping)
 
     var target by targetProperty
     var identifierMap by identifierMapProperty
 }
 
-class DtSpecSourceIdentifierMapViewModel(column: String,
-                                         identifier: DtSpecSourceIdentifierMappingViewModel) {
+class DtSpecColumnIdentifierMappingViewModel(column: String,
+                                             identifier: DtSpecIdentifierAttributeMappingViewModel) {
 
     val columnProperty = SimpleStringProperty(column)
     val identifierProperty = SimpleObjectProperty(identifier)
@@ -37,12 +37,14 @@ class DtSpecSourceIdentifierMapViewModel(column: String,
     var identifier by identifierProperty
 }
 
-class DtSpecSourceIdentifierMappingViewModel(name: String,
-                                             attribute: String) {
+class DtSpecIdentifierAttributeMappingViewModel(name: String?,
+                                                attribute: String?) {
 
     val nameProperty = SimpleStringProperty(name)
     val attributeProperty = SimpleStringProperty(attribute)
 
     var name by nameProperty
     var attribute by attributeProperty
+
+    override fun toString() = "$name: $attribute"
 }

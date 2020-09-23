@@ -5,19 +5,13 @@ import at.willhaben.dt.snowpit.service.isValidFieldName
 import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierGenerator
 import at.willhaben.dt.snowpit.view.Icons
 import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeViewModel
-import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
-import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.image.ImageView
 import tornadofx.*
 
 class IdentifierFragment : Fragment() {
 
     private val controller: IdentifierController by inject()
-
-
-    private val selectedIdentifierName = SimpleStringProperty()
-
 
     override val root = hbox {
         vbox {
@@ -26,16 +20,17 @@ class IdentifierFragment : Fragment() {
             }.action {
                 controller.addIdentifier()
             }
+
             button(graphic = ImageView(Icons.IconRemoveIdentifier)) {
                 tooltip("Remove Identifier")
-                enableWhen { controller.selectedIdentifier.isNotNull  }
+                enableWhen { controller.selectedIdentifier.isNotNull }
             }.action {
                 controller.removeIdentifier()
             }
         }
         hbox {
 
-            val identifiersListView = listview(controller.dtSpecYamlViewModel.identifiers) {
+            val identifiersListView = listview(controller.dtSpecViewModel.identifiers) {
                 prefWidth = 512.0
                 maxHeight = 256.0
                 cellFormat { text = it.identifier }
@@ -43,10 +38,11 @@ class IdentifierFragment : Fragment() {
             }
 
             vbox {
-                paddingAll = 8.0
+                paddingAll = 4.0
                 visibleWhen { controller.selectedIdentifier.isNotNull }
                 hbox {
-                    label(text = "Identifier Name: ")
+                    paddingAll = 4.0
+                    label(text = "Identifier Name: ") { alignment = Pos.CENTER_LEFT }
                     val identifierNameTextfield = textfield() {
                         filterInput { it.controlNewText.isValidFieldName() }
                     }
@@ -62,6 +58,7 @@ class IdentifierFragment : Fragment() {
                     }
                 }
                 hbox {
+                    paddingAll = 4.0
                     vbox {
                         button(graphic = ImageView(Icons.IconAddCounter)) {
                             tooltip("Add ID Generator")
@@ -69,6 +66,7 @@ class IdentifierFragment : Fragment() {
                         }.action {
                             controller.addAttribute()
                         }
+
                         button(graphic = ImageView(Icons.IconRemoveCounter)) {
                             tooltip("Remove ID Generator")
                             enableWhen { controller.selectedIdentifierAttribute.isNotNull }
@@ -78,12 +76,12 @@ class IdentifierFragment : Fragment() {
                     }
                     val identifierAttributesTable = tableview<DtSpecIdentifierAttributeViewModel> {
                         prefWidth = 768.0
-                        //table = editModel
                         isEditable = true
-                        //columnResizePolicy = SmartResize.POLICY
+
                         column("Field", DtSpecIdentifierAttributeViewModel::field) {
                             remainingWidth()
                         }.makeEditable()
+
                         column("Generator", DtSpecIdentifierAttributeViewModel::generator) {
                             prefWidth = 256.0
                         }.useComboBox(DtSpecYamlIdentifierGenerator.values().map { it.name }.toList().asObservable())
@@ -101,7 +99,6 @@ class IdentifierFragment : Fragment() {
                             identifierAttributesTable.itemsProperty().bindBidirectional(newItem.attributesProperty)
                         }
                     }
-                    //tableview(items=selectedIdentifier.a) {  }
                 }
             }
         }

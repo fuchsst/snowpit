@@ -3,7 +3,7 @@ package at.willhaben.dt.snowpit.view
 
 import at.willhaben.dt.snowpit.controller.MainFormController
 import at.willhaben.dt.snowpit.view.document.fragments.DtSpecDocumentFragment
-import at.willhaben.dt.snowpit.view.document.model.DtSpecYamlViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.scene.control.TabPane
 import javafx.scene.image.ImageView
 import tornadofx.*
@@ -108,7 +108,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
     private fun menuItemSaveAsHandler() {
         if (tabPane.tabs.isNotEmpty()) {
             val selectedTab = tabPane.tabs.first { it.isSelected }
-            val dtSpecYamlViewModel = selectedTab.userData as DtSpecYamlViewModel
+            val dtSpecYamlViewModel = selectedTab.userData as DtSpecViewModel
             controller.saveFile(dtSpecYamlViewModel, promptFilename = true)
         }
     }
@@ -117,7 +117,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
         if (tabPane.tabs.isNotEmpty()) {
             val selectedTab = tabPane.tabs.first { it.isSelected }
             val promptForFilename = (selectedTab.text.contains("<"))
-            val dtSpecYamlViewModel = selectedTab.userData as DtSpecYamlViewModel
+            val dtSpecYamlViewModel = selectedTab.userData as DtSpecViewModel
             controller.saveFile(dtSpecYamlViewModel, promptForFilename)
         }
     }

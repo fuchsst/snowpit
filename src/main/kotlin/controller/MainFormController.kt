@@ -4,7 +4,7 @@ package at.willhaben.dt.snowpit.controller
 import at.willhaben.dt.snowpit.converter.convert
 import at.willhaben.dt.snowpit.service.DtSpecYamlService
 import at.willhaben.dt.snowpit.service.model.DtSpecYaml
-import at.willhaben.dt.snowpit.view.document.model.DtSpecYamlViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.application.Platform
 import javafx.stage.FileChooser
 import tornadofx.*
@@ -22,7 +22,7 @@ class MainFormController : Controller() {
             scenarios = mutableListOf()
     ).convert(filename)
 
-    fun openFile(): DtSpecYamlViewModel? {
+    fun openFile(): DtSpecViewModel? {
         val fileChooser = FileChooser().apply {
             extensionFilters.add(FileChooser.ExtensionFilter("DtSpec Yaml", "*.yml"))
             title = "Open DtSpec Yaml..."
@@ -38,19 +38,19 @@ class MainFormController : Controller() {
 
     }
 
-    fun saveFile(dtSpecYamlViewModel: DtSpecYamlViewModel, promptFilename: Boolean = false) {
+    fun saveFile(dtSpecViewModel: DtSpecViewModel, promptFilename: Boolean = false) {
         val file = if (promptFilename) {
             val fileChooser = FileChooser().apply {
                 extensionFilters.add(FileChooser.ExtensionFilter("DtSpec Yaml", "*.yml"))
                 title = "Save DtSpec Yaml..."
-                initialFileName = dtSpecYamlViewModel.filename
+                initialFileName = dtSpecViewModel.filename
             }
             fileChooser.showSaveDialog(null)
         } else {
-            File(dtSpecYamlViewModel.filename)
+            File(dtSpecViewModel.filename)
         }
         if (file != null)
-            dtSpecYamlService.saveDtSpecYaml(file, dtSpecYamlViewModel.convert())
+            dtSpecYamlService.saveDtSpecYaml(file, dtSpecViewModel.convert())
     }
 
     fun quitApp() {

@@ -4,13 +4,14 @@ import at.willhaben.dt.snowpit.service.model.*
 import at.willhaben.dt.snowpit.view.document.model.*
 import tornadofx.*
 
-fun DtSpecYaml.convert(filename: String) = DtSpecYamlViewModel(
+fun DtSpecYaml.convert(filename: String) = DtSpecViewModel(
         filename = filename,
         version = this.version,
         description = this.description,
         identifiers = this.identifiers.map { it.convert() }.toMutableList().asObservable(),
         sources = this.sources.map { it.convert() }.toMutableList().asObservable(),
         targets = this.targets.map { it.convert() }.toMutableList().asObservable(),
+        scenarios = this.scenarios.map { it.convert() }.toMutableList().asObservable()
 )
 
 fun DtSpecYamlIdentifier.convert() = DtSpecIdentifierViewModel(
@@ -25,20 +26,43 @@ fun DtSpecYamlIdentifierAttribute.convert() = DtSpecIdentifierAttributeViewModel
 
 fun DtSpecYamlSource.convert() = DtSpecSourceViewModel(
         source = this.source,
-        identifierMap = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
+        columnIdentifierMapping = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
 )
 
 fun DtSpecYamlTarget.convert() = DtSpecTargetViewModel(
         target = this.target,
-        identifierMap = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
+        columnIdentifierMapping = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
 )
 
-fun DtSpecItentifierMap.convert() = DtSpecSourceIdentifierMapViewModel(
+fun DtSpecItentifierMap.convert() = DtSpecColumnIdentifierMappingViewModel(
         column = this.column,
         identifier = this.identifier.convert()
 )
 
-fun DtSpecSourceIdentifierMapping.convert() = DtSpecSourceIdentifierMappingViewModel(
+fun DtSpecSourceIdentifierMapping.convert() = DtSpecIdentifierAttributeMappingViewModel(
         name = this.name,
         attribute = this.attribute
+)
+
+fun DtSpecScenario.convert() = DtSpecScenarioViewModel(
+        scenario = this.scenario,
+        cases = this.cases.map { it.convert() }.toMutableList().asObservable()
+)
+
+fun DtSpecScenarioCase.convert() = DtSpecScenarioCaseViewModel(
+        case = this.case,
+        description = this.description,
+        factory = this.factory.data.map { it.convert() }.toMutableList().asObservable(),
+        expected = this.expected.data.map { it.convert() }.toMutableList().asObservable()
+)
+
+fun DtSpecScenarioCaseFactorySource.convert() = DtSpecScenarioCaseFactoryViewModel(
+        source = this.source,
+        table = this.table
+)
+
+fun DtSpecScenarioCaseExpectedData.convert() = DtSpecScenarioCaseExpectedDataViewModel(
+        target = this.target,
+        table = this.table,
+        byKeys = this.by.toMutableList().asObservable()
 )

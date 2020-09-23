@@ -1,7 +1,7 @@
 package at.willhaben.dt.snowpit.view.document.fragments
 
 import at.willhaben.dt.snowpit.view.Icons
-import at.willhaben.dt.snowpit.view.document.model.DtSpecYamlViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import javafx.geometry.Side
@@ -9,11 +9,11 @@ import javafx.scene.image.ImageView
 import tornadofx.*
 
 
-class DtSpecDocumentFragment(dtSpecYamlViewModel: DtSpecYamlViewModel) : Fragment() {
+class DtSpecDocumentFragment(dtSpecViewModel: DtSpecViewModel) : Fragment() {
 
     override val root = hbox {
         val fragmentScope = Scope()
-        setInScope(dtSpecYamlViewModel, fragmentScope)
+        setInScope(dtSpecViewModel, fragmentScope)
 
         fitToParentSize()
 
@@ -31,7 +31,7 @@ class DtSpecDocumentFragment(dtSpecYamlViewModel: DtSpecYamlViewModel) : Fragmen
             hbox(spacing = 8) {
                 fitToParentWidth()
                 label(text = "Description: ")
-                textfield(dtSpecYamlViewModel.description)
+                textfield(dtSpecViewModel.description)
             }
 
             drawer(side = Side.LEFT, multiselect = true) {

@@ -63,5 +63,5 @@ data class DtSpecScenarioCaseExpected(
 data class DtSpecScenarioCaseExpectedData(
         val target: String,
         val table: String,
-        val by: List<String>?
+        val by: List<String> = emptyList()
 )
