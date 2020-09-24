@@ -4,7 +4,6 @@ import at.willhaben.dt.snowpit.controller.SourceController
 import at.willhaben.dt.snowpit.service.isValidQualifiedName
 import at.willhaben.dt.snowpit.view.Icons
 import at.willhaben.dt.snowpit.view.document.model.DtSpecColumnIdentifierMappingViewModel
-import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeMappingViewModel
 import javafx.geometry.Pos
 import javafx.scene.image.ImageView
 import tornadofx.*
@@ -88,7 +87,7 @@ class SourceFragment : Fragment() {
                             cellFormat {
                                 text = "${it.name}: ${it.attribute}"
                             }
-                        }.useComboBox(emptyList<DtSpecIdentifierAttributeMappingViewModel>().asObservable())
+                        }.useComboBox(controller.availableIdentifierAttributes)
 
                         bindSelected(controller.selectedIdentifierMapViewModel)
                         columnResizePolicy = SmartResize.POLICY
@@ -97,7 +96,6 @@ class SourceFragment : Fragment() {
                     sourcesListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->
                         if (oldItem != null) {
                             identifierAttributesTable.itemsProperty().unbindBidirectional(oldItem.identifierMapProperty)
-
                         }
                         if (newItem != null) {
                             identifierAttributesTable.itemsProperty().bindBidirectional(newItem.identifierMapProperty)

@@ -47,4 +47,14 @@ class DtSpecIdentifierAttributeMappingViewModel(name: String?,
     var attribute by attributeProperty
 
     override fun toString() = "$name: $attribute"
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is DtSpecIdentifierAttributeMappingViewModel) return false
+
+        return (name == other.name) && (attribute != other.attribute)
+    }
+
+    override fun hashCode(): Int = 31 * nameProperty.hashCode() + attributeProperty.hashCode()
+
 }
