@@ -37,24 +37,24 @@ class DtSpecColumnIdentifierMappingViewModel(column: String,
     var identifier by identifierProperty
 }
 
-class DtSpecIdentifierAttributeMappingViewModel(name: String?,
-                                                attribute: String?) {
+class DtSpecIdentifierAttributeMappingViewModel(identifier: DtSpecIdentifierViewModel?,
+                                                attribute: DtSpecIdentifierAttributeViewModel?) {
 
-    val nameProperty = SimpleStringProperty(name)
-    val attributeProperty = SimpleStringProperty(attribute)
+    val identifierProperty = SimpleObjectProperty(identifier)
+    val attributeProperty = SimpleObjectProperty(attribute)
 
-    var name by nameProperty
+    var identifier by identifierProperty
     var attribute by attributeProperty
 
-    override fun toString() = "$name: $attribute"
+    override fun toString() = "${identifier?.identifier}: ${attribute?.field}"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is DtSpecIdentifierAttributeMappingViewModel) return false
 
-        return (name == other.name) && (attribute != other.attribute)
+        return (identifier?.identifier == other.identifier?.identifier) && (attribute?.field == other.attribute?.field)
     }
 
-    override fun hashCode(): Int = 31 * nameProperty.hashCode() + attributeProperty.hashCode()
+    override fun hashCode(): Int = 31 * identifierProperty.hashCode() + attributeProperty.hashCode()
 
 }

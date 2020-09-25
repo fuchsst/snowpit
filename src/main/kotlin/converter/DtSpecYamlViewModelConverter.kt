@@ -7,7 +7,8 @@ fun DtSpecViewModel.convert() = DtSpecYaml(
         version = this.version,
         description = this.description,
         identifiers = this.identifiers.map { it.convert() }.toList(),
-        sources = this.sources.map { it.convert() }.toList()
+        sources = this.sources.map { it.convert() }.toList(),
+        targets = this.targets.map { it.convert() }.toList()
 )
 
 fun DtSpecIdentifierViewModel.convert() = DtSpecYamlIdentifier(
@@ -25,12 +26,17 @@ fun DtSpecSourceViewModel.convert() = DtSpecYamlSource(
         identifier_map = this.identifierMap.map { it.convert() }.toList()
 )
 
+fun DtSpecTargetViewModel.convert() = DtSpecYamlTarget(
+        target = this.target,
+        identifier_map = this.identifierMap.map { it.convert() }.toList()
+)
+
 fun DtSpecColumnIdentifierMappingViewModel.convert() = DtSpecItentifierMap(
         column = this.column,
         identifier = this.identifier.convert()
 )
 
 fun DtSpecIdentifierAttributeMappingViewModel.convert() = DtSpecSourceIdentifierMapping(
-        name = this.name,
-        attribute = this.attribute
+        name = this.identifier?.identifier ?: "",
+        attribute = this.attribute?.field ?: ""
 )

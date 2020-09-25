@@ -2,17 +2,22 @@ package at.willhaben.dt.snowpit.converter
 
 import at.willhaben.dt.snowpit.service.model.*
 import at.willhaben.dt.snowpit.view.document.model.*
+import javafx.collections.ObservableList
 import tornadofx.*
 
-fun DtSpecYaml.convert(filename: String) = DtSpecViewModel(
-        filename = filename,
-        version = this.version,
-        description = this.description,
-        identifiers = this.identifiers.map { it.convert() }.toMutableList().asObservable(),
-        sources = this.sources.map { it.convert() }.toMutableList().asObservable(),
-        targets = this.targets.map { it.convert() }.toMutableList().asObservable(),
-        scenarios = this.scenarios.map { it.convert() }.toMutableList().asObservable()
-)
+fun DtSpecYaml.convert(filename: String): DtSpecViewModel {
+    val identifiers = this.identifiers.map { it.convert() }.toMutableList().asObservable()
+
+    return DtSpecViewModel(
+            filename = filename,
+            version = this.version,
+            description = this.description,
+            identifiers = identifiers,
+            sources = this.sources.map { it.convert(identifiers) }.toMutableList().asObservable(),
+            targets = this.targets.map { it.convert(identifiers) }.toMutableList().asObservable(),
+            scenarios = this.scenarios.map { it.convert() }.toMutableList().asObservable()
+    )
+}
 
 fun DtSpecYamlIdentifier.convert() = DtSpecIdentifierViewModel(
         identifier = this.identifier,
@@ -24,24 +29,24 @@ fun DtSpecYamlIdentifierAttribute.convert() = DtSpecIdentifierAttributeViewModel
         generator = this.generator.name
 )
 
-fun DtSpecYamlSource.convert() = DtSpecSourceViewModel(
+fun DtSpecYamlSource.convert(dtSpecYamlIdentifierViewModelList: ObservableList<DtSpecIdentifierViewModel>) = DtSpecSourceViewModel(
         source = this.source,
-        columnIdentifierMapping = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
+        columnIdentifierMapping = this.identifier_map.map { it.convert(dtSpecYamlIdentifierViewModelList) }.toMutableList().asObservable()
 )
 
-fun DtSpecYamlTarget.convert() = DtSpecTargetViewModel(
+fun DtSpecYamlTarget.convert(dtSpecYamlIdentifierViewModelList: ObservableList<DtSpecIdentifierViewModel>) = DtSpecTargetViewModel(
         target = this.target,
-        columnIdentifierMapping = this.identifier_map.map { it.convert() }.toMutableList().asObservable()
+        columnIdentifierMapping = this.identifier_map.map { it.convert(dtSpecYamlIdentifierViewModelList) }.toMutableList().asObservable()
 )
 
-fun DtSpecItentifierMap.convert() = DtSpecColumnIdentifierMappingViewModel(
+fun DtSpecItentifierMap.convert(dtSpecYamlIdentifierViewModelList: ObservableList<DtSpecIdentifierViewModel>) = DtSpecColumnIdentifierMappingViewModel(
         column = this.column,
-        identifier = this.identifier.convert()
+        identifier = this.identifier.convert(dtSpecYamlIdentifierViewModelList)
 )
 
-fun DtSpecSourceIdentifierMapping.convert() = DtSpecIdentifierAttributeMappingViewModel(
-        name = this.name,
-        attribute = this.attribute
+fun DtSpecSourceIdentifierMapping.convert(dtSpecYamlIdentifierViewModelList: ObservableList<DtSpecIdentifierViewModel>) = DtSpecIdentifierAttributeMappingViewModel(
+        identifier = dtSpecYamlIdentifierViewModelList.first { it.identifier == this.name },
+        attribute = dtSpecYamlIdentifierViewModelList.first { it.identifier == this.name }.attributes.first { it.field == this.attribute }
 )
 
 fun DtSpecScenario.convert() = DtSpecScenarioViewModel(

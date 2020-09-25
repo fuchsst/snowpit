@@ -27,7 +27,7 @@ class SourceController : Controller() {
         val identifierListListener = InvalidationListener {
             val currentList = dtSpecViewModel.identifiers.flatMap { identifier ->
                 identifier.attributes.map { attribute ->
-                    DtSpecIdentifierAttributeMappingViewModel(identifier.identifier, attribute.field)
+                    DtSpecIdentifierAttributeMappingViewModel(identifier, attribute)
                 }
             }
             availableIdentifierAttributes.clear()
@@ -71,14 +71,14 @@ class SourceController : Controller() {
                 DtSpecColumnIdentifierMappingViewModel(
                         column = "column_${selectedColumnIdentifierMapping.size}",
                         identifier = DtSpecIdentifierAttributeMappingViewModel(
-                                name = dtSpecViewModel.identifiers.firstOrNull()?.identifier,
-                                attribute = dtSpecViewModel.identifiers.firstOrNull()?.attributes?.firstOrNull()?.field
+                                identifier = dtSpecViewModel.identifiers.firstOrNull(),
+                                attribute = dtSpecViewModel.identifiers.firstOrNull()?.attributes?.firstOrNull()
                         )
                 )
         )
     }
 
-    fun removeAttribute() {
+    fun removeSourceFieldMapping() {
         selectedColumnIdentifierMapping.remove(selectedIdentifierMapViewModel.value)
     }
 

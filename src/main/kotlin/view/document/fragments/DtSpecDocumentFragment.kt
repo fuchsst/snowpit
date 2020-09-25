@@ -42,17 +42,7 @@ class DtSpecDocumentFragment(dtSpecViewModel: DtSpecViewModel) : Fragment() {
                 }
                 item("Sources", expanded = true) { this += find<SourceFragment>(fragmentScope) }
 
-                item("Targets", expanded = true) {
-                    hbox {
-                        vbox {
-                            button(graphic = ImageView(Icons.IconAddTable)) { tooltip("Add Target") }
-                            button(graphic = ImageView(Icons.IconRemoveTable)) { tooltip("Remove Target") }
-                        }
-                        hbox {
-
-                        }
-                    }
-                }
+                item("Targets", expanded = true) { this += find<TargetFragment>(fragmentScope) }
 
                 item("Scenarios", expanded = true) {
                     hbox {

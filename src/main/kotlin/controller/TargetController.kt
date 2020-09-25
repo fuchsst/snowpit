@@ -4,6 +4,7 @@ import at.willhaben.dt.snowpit.view.document.model.DtSpecColumnIdentifierMapping
 import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeMappingViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecTargetViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
+import javafx.beans.InvalidationListener
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.control.Alert
@@ -18,8 +19,32 @@ class TargetController : Controller() {
     val selectedColumnIdentifierMapping: SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>
         get() = selectedTarget.value.identifierMapProperty
 
-    val selectedTargetIdentifierMappingViewModel = SimpleObjectProperty<DtSpecIdentifierAttributeMappingViewModel>()
+    val selectedIdentifierMapViewModel = SimpleObjectProperty<DtSpecColumnIdentifierMappingViewModel>()
 
+    val availableIdentifierAttributes = mutableListOf<DtSpecIdentifierAttributeMappingViewModel>().asObservable()
+
+    init {
+        val identifierListListener = InvalidationListener {
+            val currentList = dtSpecViewModel.identifiers.flatMap { identifier ->
+                identifier.attributes.map { attribute ->
+                    DtSpecIdentifierAttributeMappingViewModel(identifier, attribute)
+                }
+            }
+            availableIdentifierAttributes.clear()
+            availableIdentifierAttributes.addAll(currentList)
+            availableIdentifierAttributes.sorted()
+        }
+        dtSpecViewModel.identifiersProperty.addListener { _, oldItem, newItem ->
+            if (oldItem != null) {
+                oldItem.forEach { it.attributesProperty.removeListener(identifierListListener) }
+                oldItem.removeListener(identifierListListener)
+            }
+            if (newItem != null) {
+                newItem.forEach { it.attributesProperty.addListener(identifierListListener) }
+                newItem.addListener(identifierListListener)
+            }
+        }
+    }
 
     fun addTarget() {
         dtSpecViewModel.targets.add(
@@ -46,15 +71,15 @@ class TargetController : Controller() {
                 DtSpecColumnIdentifierMappingViewModel(
                         column = "column_${selectedColumnIdentifierMapping.size}",
                         identifier = DtSpecIdentifierAttributeMappingViewModel(
-                                name = dtSpecViewModel.identifiers.firstOrNull()?.identifier,
-                                attribute = dtSpecViewModel.identifiers.firstOrNull()?.attributes?.firstOrNull()?.field
+                                identifier = dtSpecViewModel.identifiers.firstOrNull(),
+                                attribute = dtSpecViewModel.identifiers.firstOrNull()?.attributes?.firstOrNull()
                         )
                 )
         )
     }
 
     fun removeTargetFieldMapping() {
-        selectedColumnIdentifierMapping.remove(selectedTargetIdentifierMappingViewModel.value)
+        selectedColumnIdentifierMapping.remove(selectedIdentifierMapViewModel.value)
     }
 
 

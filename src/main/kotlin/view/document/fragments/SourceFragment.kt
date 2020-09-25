@@ -70,7 +70,7 @@ class SourceFragment : Fragment() {
                             tooltip("Remove Column/Identifier mapping")
                             //enableWhen { controller.selectedColumnIdentifierMapping.isNotNull }
                         }.action {
-                            controller.removeAttribute()
+                            controller.removeSourceFieldMapping()
                         }
                     }
                     val identifierAttributesTable = tableview<DtSpecColumnIdentifierMappingViewModel> {
@@ -83,9 +83,9 @@ class SourceFragment : Fragment() {
 
                         column("Identifier", DtSpecColumnIdentifierMappingViewModel::identifier) {
                             remainingWidth()
-                            isEditable=true
+                            isEditable = true
                             cellFormat {
-                                text = "${it.name}: ${it.attribute}"
+                                text = "${it.identifier}: ${it.attribute}"
                             }
                         }.useComboBox(controller.availableIdentifierAttributes)
 

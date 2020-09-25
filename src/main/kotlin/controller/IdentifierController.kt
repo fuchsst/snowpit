@@ -59,14 +59,14 @@ class IdentifierController : Controller() {
                 dtSpecViewModel
                         .sources.any { source ->
                             source.identifierMap.any { identifierMap ->
-                                identifierMap.identifier.name == this.identifier
+                                identifierMap.identifier.identifier?.identifier == this.identifier
                             }
                         }
         val isUsedInTargets =
                 dtSpecViewModel
                         .targets.any { target ->
                             target.identifierMap.any { identifierMap ->
-                                identifierMap.identifier.name == this.identifier
+                                identifierMap.identifier.identifier?.identifier == this.identifier
                             }
                         }
         return isUsedInSources || isUsedInTargets
