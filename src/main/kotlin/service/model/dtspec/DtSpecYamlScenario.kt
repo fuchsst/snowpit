@@ -1,4 +1,4 @@
-package at.willhaben.dt.snowpit.service.model
+package at.willhaben.dt.snowpit.service.model.dtspec
 
 import kotlinx.serialization.Serializable
 
@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
  * @param scenario Name of the test scenario
  * @param cases List of test cases
  */
-data class DtSpecScenario(
+data class DtSpecYamlScenario(
         val scenario: String,
         val cases: List<DtSpecScenarioCase>
 )

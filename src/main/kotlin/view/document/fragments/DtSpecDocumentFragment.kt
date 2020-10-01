@@ -44,6 +44,8 @@ class DtSpecDocumentFragment(dtSpecViewModel: DtSpecViewModel) : Fragment() {
 
                 item("Targets", expanded = true) { this += find<TargetFragment>(fragmentScope) }
 
+                item("Factories", expanded = true) { this += find<FactoriesFragment>(fragmentScope) }
+
                 item("Scenarios", expanded = true) {
                     hbox {
                         vbox {

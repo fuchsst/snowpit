@@ -1,6 +1,6 @@
 package at.willhaben.dt.snowpit.controller
 
-import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierGenerator
+import at.willhaben.dt.snowpit.service.model.dtspec.DtSpecYamlIdentifierGenerator
 import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel

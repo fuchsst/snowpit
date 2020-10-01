@@ -1,0 +1,63 @@
+# For more information on how to configure this file, please see:
+# https://github.com/fishtown-analytics/dbt/blob/master/sample.profiles.yml
+
+dwh-1:
+  target: test
+  outputs:
+    dev:
+      type: snowflake
+      account: myaccount.eu-west-1
+      user: "{{      env_var('DBT_USER')     }}"
+      password: "{{env_var('DBT_PASSWORD')}}"
+      role: service_dbt
+      threads: 4
+      database: dwh_dev
+      warehouse: xs
+      schema: dwh
+    test:
+      type: snowflake
+      account: myaccount.eu-west-1
+      user: "{{ env_var(   'DBT_USER') }}"
+      password: "{{ env_var('DBT_PASSWORD'   ) }}"
+      role: service_dbt
+      threads: 6
+      database: "{{ env_var('DBT_DATABASE') }}"
+      warehouse: xs
+      schema: dwh
+    prod:
+      type: snowflake
+      account: myaccount.eu-west-1
+      user: "{{ env_var('DBT_USER') }}"
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      role: service_dbt
+      threads: 8
+      database: dwh_prod
+      warehouse: s
+      schema: dwh
+
+dwh-2:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: myaccount.eu-central-1
+      user: "{{ env_var('DBT_USER') }}"
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      role: service_dbt
+      threads: 2
+      database: dwh_test
+      warehouse: m
+      schema: dwh2
+    prod:
+      type: snowflake
+      account: myaccount.eu-central-1
+      user: "{{ env_var('DBT_USER') }}"
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      role: service_dbt
+      threads: 4
+      database: dwh_prod2
+      warehouse: l
+      schema: dwh3
+
+config:
+  send_anonymous_usage_stats: False

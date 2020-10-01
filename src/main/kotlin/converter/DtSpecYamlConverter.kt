@@ -1,6 +1,6 @@
 package at.willhaben.dt.snowpit.converter
 
-import at.willhaben.dt.snowpit.service.model.*
+import at.willhaben.dt.snowpit.service.model.dtspec.*
 import at.willhaben.dt.snowpit.view.document.model.*
 import javafx.collections.ObservableList
 import tornadofx.*
@@ -15,6 +15,7 @@ fun DtSpecYaml.convert(filename: String): DtSpecViewModel {
             identifiers = identifiers,
             sources = this.sources.map { it.convert(identifiers) }.toMutableList().asObservable(),
             targets = this.targets.map { it.convert(identifiers) }.toMutableList().asObservable(),
+            factories = this.factories.map { it.convert() }.toMutableList().asObservable(),
             scenarios = this.scenarios.map { it.convert() }.toMutableList().asObservable()
     )
 }
@@ -49,7 +50,13 @@ fun DtSpecSourceIdentifierMapping.convert(dtSpecYamlIdentifierViewModelList: Obs
         attribute = dtSpecYamlIdentifierViewModelList.first { it.identifier == this.name }.attributes.first { it.field == this.attribute }
 )
 
-fun DtSpecScenario.convert() = DtSpecScenarioViewModel(
+fun DtSpecYamlFactory.convert() =
+        DtSpecFactoryViewModel(
+                factory = this.factory,
+                dataFactories = this.data.map { it.convert() }.toMutableList().asObservable()
+        )
+
+fun DtSpecYamlScenario.convert() = DtSpecScenarioViewModel(
         scenario = this.scenario,
         cases = this.cases.map { it.convert() }.toMutableList().asObservable()
 )

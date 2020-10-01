@@ -12,6 +12,7 @@ class DtSpecViewModel(filename: String,
                       identifiers: ObservableList<DtSpecIdentifierViewModel>,
                       sources: ObservableList<DtSpecSourceViewModel>,
                       targets: ObservableList<DtSpecTargetViewModel>,
+                      factories: ObservableList<DtSpecFactoryViewModel>,
                       scenarios: ObservableList<DtSpecScenarioViewModel>) : ViewModel() {
 
     val filenameProperty = SimpleStringProperty(filename)
@@ -20,6 +21,7 @@ class DtSpecViewModel(filename: String,
     val identifiersProperty = SimpleListProperty(identifiers)
     val sourcesProperty = SimpleListProperty(sources)
     val targetsProperty = SimpleListProperty(targets)
+    val factoriesProperty = SimpleListProperty(factories)
     val scenariosProperty = SimpleListProperty(scenarios)
 
     var filename by filenameProperty
@@ -28,5 +30,6 @@ class DtSpecViewModel(filename: String,
     var identifiers by identifiersProperty
     var sources by sourcesProperty
     var targets by targetsProperty
+    var factories by factoriesProperty
     var scenarios by scenariosProperty
 }

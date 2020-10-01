@@ -1,4 +1,4 @@
-package at.willhaben.dt.snowpit.service.model
+package at.willhaben.dt.snowpit.service.model.dtspec
 
 import kotlinx.serialization.Serializable
 

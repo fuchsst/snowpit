@@ -1,6 +1,6 @@
 package at.willhaben.dt.snowpit.service
 
-import at.willhaben.dt.snowpit.service.model.DtSpecYaml
+import at.willhaben.dt.snowpit.service.model.dtspec.DtSpecYaml
 import com.charleskorn.kaml.Yaml
 import java.io.File
 

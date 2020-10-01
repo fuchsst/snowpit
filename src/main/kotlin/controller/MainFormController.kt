@@ -3,7 +3,7 @@ package at.willhaben.dt.snowpit.controller
 
 import at.willhaben.dt.snowpit.converter.convert
 import at.willhaben.dt.snowpit.service.DtSpecYamlService
-import at.willhaben.dt.snowpit.service.model.DtSpecYaml
+import at.willhaben.dt.snowpit.service.model.dtspec.DtSpecYaml
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.application.Platform
 import javafx.stage.FileChooser

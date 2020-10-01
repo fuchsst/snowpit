@@ -2,7 +2,7 @@ package at.willhaben.dt.snowpit.view.document.fragments
 
 import at.willhaben.dt.snowpit.controller.IdentifierController
 import at.willhaben.dt.snowpit.service.isValidFieldName
-import at.willhaben.dt.snowpit.service.model.DtSpecYamlIdentifierGenerator
+import at.willhaben.dt.snowpit.service.model.dtspec.DtSpecYamlIdentifierGenerator
 import at.willhaben.dt.snowpit.view.Icons
 import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeViewModel
 import javafx.geometry.Pos

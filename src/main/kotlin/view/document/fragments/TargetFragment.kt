@@ -29,7 +29,7 @@ class TargetFragment : Fragment() {
         }
         hbox {
 
-            val sourcesListView = listview(controller.dtSpecViewModel.targets) {
+            val targetsListView = listview(controller.dtSpecViewModel.targets) {
                 prefWidth = 512.0
                 maxHeight = 256.0
                 cellFormat { text = it.target }
@@ -46,7 +46,7 @@ class TargetFragment : Fragment() {
                         filterInput { it.controlNewText.isValidQualifiedName() }
                     }
 
-                    sourcesListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->
+                    targetsListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->
                         if (oldItem != null) {
                             targetNameTextfield.textProperty().unbindBidirectional(oldItem.targetProperty)
 
@@ -93,7 +93,7 @@ class TargetFragment : Fragment() {
                         columnResizePolicy = SmartResize.POLICY
                     }
 
-                    sourcesListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->
+                    targetsListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->
                         if (oldItem != null) {
                             identifierAttributesTable.itemsProperty().unbindBidirectional(oldItem.identifierMapProperty)
                         }

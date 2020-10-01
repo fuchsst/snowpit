@@ -1,4 +1,4 @@
-package at.willhaben.dt.snowpit.service.model
+package at.willhaben.dt.snowpit.service.model.dtspec
 
 import kotlinx.serialization.Serializable
 
@@ -9,5 +9,6 @@ data class DtSpecYaml(
         val identifiers: List<DtSpecYamlIdentifier> = emptyList(),
         val sources: List<DtSpecYamlSource> = emptyList(),
         val targets: List<DtSpecYamlTarget> = emptyList(),
-        val scenarios: List<DtSpecScenario> = emptyList()
+        val factories: List<DtSpecYamlFactory> = emptyList(),
+        val scenarios: List<DtSpecYamlScenario> = emptyList()
 )
