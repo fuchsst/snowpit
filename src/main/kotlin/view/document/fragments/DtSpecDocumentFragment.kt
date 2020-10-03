@@ -1,6 +1,8 @@
 package at.willhaben.dt.snowpit.view.document.fragments
 
+import at.willhaben.dt.snowpit.controller.DocumentController
 import at.willhaben.dt.snowpit.view.Icons
+import at.willhaben.dt.snowpit.view.document.model.DbtProfileListViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
@@ -11,6 +13,8 @@ import tornadofx.*
 
 class DtSpecDocumentFragment(dtSpecViewModel: DtSpecViewModel) : Fragment() {
 
+    private val controller: DocumentController by inject()
+
     override val root = hbox {
         val fragmentScope = Scope()
         setInScope(dtSpecViewModel, fragmentScope)
@@ -19,15 +23,7 @@ class DtSpecDocumentFragment(dtSpecViewModel: DtSpecViewModel) : Fragment() {
 
         vbox(spacing = 16) {
             fitToParentWidth()
-            hbox(spacing = 8) {
 
-                label(text = "Profile: ")
-                combobox<String> {
-                    items = FXCollections.observableArrayList("Dev", "UAT", "Prod", "Test")
-                    alignment = Pos.CENTER_LEFT
-                }
-                button(text = "Connect", graphic = ImageView(Icons.IconConnect))
-            }
             hbox(spacing = 8) {
                 fitToParentWidth()
                 label(text = "Description: ")

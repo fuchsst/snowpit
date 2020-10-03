@@ -1,9 +1,14 @@
 package at.willhaben.dt.snowpit.view
 
 
+import at.willhaben.dt.snowpit.DbtProfileException
 import at.willhaben.dt.snowpit.controller.MainFormController
 import at.willhaben.dt.snowpit.view.document.fragments.DtSpecDocumentFragment
+import at.willhaben.dt.snowpit.view.document.model.DbtTargetViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
+import javafx.geometry.Pos
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import javafx.scene.control.TabPane
 import javafx.scene.image.ImageView
 import tornadofx.*
@@ -12,8 +17,22 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
 
     private val controller: MainFormController by inject()
 
-    val tabPane = TabPane().apply { fitToParentWidth() }
+    private val tabPane = TabPane().apply { fitToParentWidth() }
 
+    init {
+        try {
+            controller.reloadProfiles()
+        } catch (e: DbtProfileException) {
+            alert(
+                    type = Alert.AlertType.ERROR,
+                    title = "Failed loading dbt profiles!",
+                    header = e.message ?: e.toString(),
+                    content = "Check preferences to configure the dbt_profiles.yml location.",
+                    buttons = *arrayOf(ButtonType.OK)
+            )
+        }
+
+    }
 
     override val root = form {
         setPrefSize(1280.0, 720.0)
@@ -92,6 +111,23 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
                     }.action { menuItemCloseHandler() }
                 }
 
+            }
+            hbox(spacing = 8) {
+
+                label(text = "Profile: ")
+                val profilesCombobox = combobox<DbtTargetViewModel> {
+                    items = controller.targets
+                    alignment = Pos.CENTER_LEFT
+                    cellFormat {
+                        text = it.name
+                    }
+                    bindSelected(controller.selectedTarget)
+                }
+                button(text = "Fetch/Refresh Metadata", graphic = ImageView(Icons.IconConnect)) {
+                    enableWhen { controller.selectedTarget.isNotNull }
+                }.action {
+                    controller.reloadProfiles()
+                }
             }
             this += tabPane.apply { fitToParentSize() }
         }
