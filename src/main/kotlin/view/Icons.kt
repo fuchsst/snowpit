@@ -13,6 +13,8 @@ class Icons {
         val IconPreferences = Image("icon/gear.png")
         val IconClose = Image("icon/close.png")
 
+        val IconDbt = Image("icon/dbt-32x32.png")
+
         val IconConnect = Image("icon/connected_32x32.png")
         val IconAddData = Image("icon/property-add_32x32.png")
         val IconRemoveData = Image("icon/property-remove_32x32.png")

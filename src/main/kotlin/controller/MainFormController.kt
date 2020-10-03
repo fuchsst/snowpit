@@ -5,7 +5,7 @@ import at.willhaben.dt.snowpit.DbtProfileException
 import at.willhaben.dt.snowpit.converter.convert
 import at.willhaben.dt.snowpit.service.DbtProfilesService
 import at.willhaben.dt.snowpit.service.DtSpecYamlService
-import at.willhaben.dt.snowpit.service.PreferencesService
+import at.willhaben.dt.snowpit.view.document.model.PreferencesViewModel
 import at.willhaben.dt.snowpit.service.model.dtspec.DtSpecYaml
 import at.willhaben.dt.snowpit.view.document.model.DbtTargetViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
@@ -17,7 +17,7 @@ import java.io.File
 
 class MainFormController : Controller() {
 
-    private val preferencesService = PreferencesService()
+    private val preferencesService : PreferencesViewModel by inject()
     private val dbtProfilesService = DbtProfilesService()
     private val dtSpecYamlService = DtSpecYamlService()
 
@@ -37,7 +37,7 @@ class MainFormController : Controller() {
                 throw DbtProfileException("The configured Profile '${preferencesService.dbtProfile}' not found in '${preferencesService.dbtProfilesYamlPath}'!")
             }
         } else {
-            throw DbtProfileException("The dbt_profiles.yml configuration file '${preferencesService.dbtProfilesYamlPath}' does not exist!")
+            throw DbtProfileException("The dbt profiles.yml configuration file '${preferencesService.dbtProfilesYamlPath}' does not exist!")
         }
 
     }

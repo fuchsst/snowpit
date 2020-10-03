@@ -1,25 +1,26 @@
-package at.willhaben.dt.snowpit.service
+package at.willhaben.dt.snowpit.view.document.model
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.*
 
-class PreferencesService : Component() {
+class PreferencesViewModel : ViewModel() {
 
     companion object {
         private val ROOT_NODE = "snowpit"
         private val KEY_DBT_PROFILES_YML = "dbt_profiles_yaml_file"
         private val KEY_DBT_PROFILE = "dbt_profile"
-        private val KEY_QUALIFY_TABLE_NAMES = "dbt_profiles_yaml_file"
+        private val KEY_QUALIFY_TABLE_NAMES = "qualify_table_names"
     }
 
-    private val dbtProfilesYamlPathProperty = SimpleStringProperty()
-    private val dbtProfileProperty = SimpleStringProperty()
-    private val qualifyTableNamesProperty = SimpleBooleanProperty()
+    val dbtProfilesYamlPathProperty = SimpleStringProperty()
+    val dbtProfileProperty = SimpleStringProperty()
+    val qualifyTableNamesProperty = SimpleBooleanProperty()
 
     var dbtProfilesYamlPath by dbtProfilesYamlPathProperty
     var dbtProfile by dbtProfileProperty
     var qualifyTableNames by qualifyTableNamesProperty
+
 
     init {
         preferences(ROOT_NODE) {

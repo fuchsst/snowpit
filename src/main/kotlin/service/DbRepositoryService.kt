@@ -4,8 +4,9 @@ import at.willhaben.dt.snowpit.service.model.dbmeta.DbTable
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import kotliquery.using
+import tornadofx.*
 
-class DbRepositoryService(
+class DbRepositoryService (
         private val host: String,
         private val user: String,
         private val password: String,
@@ -13,7 +14,7 @@ class DbRepositoryService(
         private val schema: String? = null,
         private val warehouse: String? = null,
         private val role: String? = null
-) {
+):Component() {
 
     private fun buildJsbcConnectionString(account: String, db: String, schema: String?, warehouse: String?, role: String?) =
             "jdbc:snowflake://$account.snowflakecomputing.com/" +

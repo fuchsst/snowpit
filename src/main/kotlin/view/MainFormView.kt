@@ -17,6 +17,8 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
 
     private val controller: MainFormController by inject()
 
+    private val preferencesView: PreferencesView by inject()
+
     private val tabPane = TabPane().apply { fitToParentWidth() }
 
     init {
@@ -103,7 +105,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
                     button {
                         graphic = ImageView(Icons.IconPreferences)
                         tooltip("Preferences...")
-                    }
+                    }.action { menuItemPreferencesHandler() }
 
                     button {
                         graphic = ImageView(Icons.IconClose)
@@ -138,7 +140,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
     }
 
     private fun menuItemPreferencesHandler() {
-
+        preferencesView.openModal(owner = this.currentWindow)
     }
 
     private fun menuItemSaveAsHandler() {
