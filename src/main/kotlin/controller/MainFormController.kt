@@ -1,46 +1,26 @@
 package at.willhaben.dt.snowpit.controller
 
 
-import at.willhaben.dt.snowpit.DbtProfileException
 import at.willhaben.dt.snowpit.converter.convert
-import at.willhaben.dt.snowpit.service.DbtProfilesService
 import at.willhaben.dt.snowpit.service.DtSpecYamlService
-import at.willhaben.dt.snowpit.view.document.model.PreferencesViewModel
 import at.willhaben.dt.snowpit.service.model.dtspec.DtSpecYaml
-import at.willhaben.dt.snowpit.view.document.model.DbtTargetViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.application.Platform
-import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.property.SimpleStringProperty
 import javafx.stage.FileChooser
 import tornadofx.*
 import java.io.File
 
 class MainFormController : Controller() {
 
-    private val preferencesService : PreferencesViewModel by inject()
-    private val dbtProfilesService = DbtProfilesService()
     private val dtSpecYamlService = DtSpecYamlService()
+    private val preferencesController: PreferencesController by inject()
+    private val metadataController: MetadataController by inject()
 
-    val targets = mutableListOf<DbtTargetViewModel>().asObservable()
-    val selectedTarget = SimpleObjectProperty<DbtTargetViewModel>()
 
+    val selectedTargetProperty = SimpleStringProperty()
+    var selectedTarget by selectedTargetProperty
 
-    fun reloadProfiles() {
-        val dbtProfilesYamlFile = File(preferencesService.dbtProfilesYamlPath)
-        if (dbtProfilesYamlFile.exists()) {
-            val profiles = dbtProfilesService.loadTargetProfiles(dbtProfilesYamlFile.inputStream())
-            val profile = profiles.find { it.name == preferencesService.dbtProfile }?.convert()
-            if (profile != null) {
-                targets.clear()
-                targets.addAll(profile.outputs)
-            } else {
-                throw DbtProfileException("The configured Profile '${preferencesService.dbtProfile}' not found in '${preferencesService.dbtProfilesYamlPath}'!")
-            }
-        } else {
-            throw DbtProfileException("The dbt profiles.yml configuration file '${preferencesService.dbtProfilesYamlPath}' does not exist!")
-        }
-
-    }
 
     fun newFile(filename: String) = DtSpecYaml(
             description = "DtSpec Test Specification",

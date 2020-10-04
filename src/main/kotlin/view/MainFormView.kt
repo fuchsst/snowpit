@@ -1,10 +1,10 @@
 package at.willhaben.dt.snowpit.view
 
 
-import at.willhaben.dt.snowpit.DbtProfileException
 import at.willhaben.dt.snowpit.controller.MainFormController
+import at.willhaben.dt.snowpit.controller.MetadataController
+import at.willhaben.dt.snowpit.controller.PreferencesController
 import at.willhaben.dt.snowpit.view.document.fragments.DtSpecDocumentFragment
-import at.willhaben.dt.snowpit.view.document.model.DbtTargetViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
@@ -15,7 +15,9 @@ import tornadofx.*
 
 class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIcon)) {
 
-    private val controller: MainFormController by inject()
+    private val metadataController: MetadataController by inject()
+    private val preferencesController: PreferencesController by inject()
+    private val mainFormController: MainFormController by inject()
 
     private val preferencesView: PreferencesView by inject()
 
@@ -23,14 +25,14 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
 
     init {
         try {
-            controller.reloadProfiles()
-        } catch (e: DbtProfileException) {
+            metadataController.reloadProfiles()
+        } catch (e: Exception) {
             alert(
                     type = Alert.AlertType.ERROR,
                     title = "Failed loading dbt profiles!",
                     header = e.message ?: e.toString(),
-                    content = "Check preferences to configure the dbt_profiles.yml location.",
-                    buttons = *arrayOf(ButtonType.OK)
+                    content = "Check preferences to configure the dbt_profiles.yml.",
+                    buttons = arrayOf(ButtonType.OK)
             )
         }
 
@@ -116,19 +118,31 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
             }
             hbox(spacing = 8) {
 
-                label(text = "Profile: ")
-                val profilesCombobox = combobox<DbtTargetViewModel> {
-                    items = controller.targets
+                label(text = "Target: ")
+                val targetsCombobox = combobox<String>(
+                        property = preferencesController.dbtProfileTargetProperty,
+                        values = metadataController.dbtProfileTargetList
+                ) {
                     alignment = Pos.CENTER_LEFT
-                    cellFormat {
-                        text = it.name
-                    }
-                    bindSelected(controller.selectedTarget)
+                }.setOnAction {
+                    preferencesController.save()
                 }
                 button(text = "Fetch/Refresh Metadata", graphic = ImageView(Icons.IconConnect)) {
-                    enableWhen { controller.selectedTarget.isNotNull }
+                    enableWhen { preferencesController.dbtProfileTargetProperty.isNotNull }
                 }.action {
-                    controller.reloadProfiles()
+                    try {
+                        metadataController.reloadDbTableMetadata()
+                    } catch (e: Exception) {
+                        alert(
+                                type = Alert.AlertType.ERROR,
+                                title = "Failed loading DB table metadata for profile target " +
+                                        "${preferencesController.dbtProfile}.${preferencesController.dbtProfileTarget}!",
+                                header = e.message ?: e.toString(),
+                                content = "Check preferences to configure the dbt_profiles.yml location and profile " +
+                                        "and check in the dbt_profiles.yml that the target is configured correctly.",
+                                buttons = arrayOf(ButtonType.OK)
+                        )
+                    }
                 }
             }
             this += tabPane.apply { fitToParentSize() }
@@ -136,18 +150,19 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
     }
 
     private fun menuItemCloseHandler() {
-        controller.quitApp()
+        mainFormController.quitApp()
     }
 
     private fun menuItemPreferencesHandler() {
         preferencesView.openModal(owner = this.currentWindow)
+        metadataController.reloadTargets()
     }
 
     private fun menuItemSaveAsHandler() {
         if (tabPane.tabs.isNotEmpty()) {
             val selectedTab = tabPane.tabs.first { it.isSelected }
             val dtSpecYamlViewModel = selectedTab.userData as DtSpecViewModel
-            controller.saveFile(dtSpecYamlViewModel, promptFilename = true)
+            mainFormController.saveFile(dtSpecYamlViewModel, promptFilename = true)
         }
     }
 
@@ -156,12 +171,12 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
             val selectedTab = tabPane.tabs.first { it.isSelected }
             val promptForFilename = (selectedTab.text.contains("<"))
             val dtSpecYamlViewModel = selectedTab.userData as DtSpecViewModel
-            controller.saveFile(dtSpecYamlViewModel, promptForFilename)
+            mainFormController.saveFile(dtSpecYamlViewModel, promptForFilename)
         }
     }
 
     private fun menuItemOpenHandler() {
-        val dtSpecYamlViewModel = controller.openFile()
+        val dtSpecYamlViewModel = mainFormController.openFile()
         if (dtSpecYamlViewModel != null) {
             val newTab = tabPane.tab("<${dtSpecYamlViewModel.filename}> *")
             newTab.userData = dtSpecYamlViewModel
@@ -172,7 +187,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
 
     private fun menuItemNewHandler() {
         val name = "new ${tabPane.tabs.size}"
-        val dtSpecYamlViewModel = controller.newFile("$name.yml")
+        val dtSpecYamlViewModel = mainFormController.newFile("$name.yml")
         val newTab = tabPane.tab("<$name> *")
         newTab.userData = dtSpecYamlViewModel
         newTab.add(DtSpecDocumentFragment(dtSpecYamlViewModel))

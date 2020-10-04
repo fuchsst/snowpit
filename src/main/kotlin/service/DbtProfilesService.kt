@@ -4,9 +4,15 @@ import at.willhaben.dt.snowpit.service.model.dbt.DbtProfile
 import at.willhaben.dt.snowpit.service.model.dbt.DbtTarget
 import at.willhaben.dt.snowpit.service.model.dbt.DbtTargetType
 import org.yaml.snakeyaml.Yaml
+import java.io.File
 import java.io.InputStream
 
 class DbtProfilesService {
+
+    fun loadTargetProfiles(profilesYamlFilename: String): List<DbtProfile> {
+        val file = File(profilesYamlFilename)
+        return loadTargetProfiles(file.inputStream())
+    }
 
     fun loadTargetProfiles(profilesYamlFileStream: InputStream): List<DbtProfile> {
         val yaml = Yaml().loadAll(profilesYamlFileStream.reader())

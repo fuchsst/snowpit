@@ -4,17 +4,16 @@ import at.willhaben.dt.snowpit.service.model.dbmeta.DbTable
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import kotliquery.using
-import tornadofx.*
 
-class DbRepositoryService (
-        private val host: String,
+class DbRepositoryService(
+        private val account: String,
         private val user: String,
         private val password: String,
         private val db: String,
         private val schema: String? = null,
         private val warehouse: String? = null,
         private val role: String? = null
-):Component() {
+) {
 
     private fun buildJsbcConnectionString(account: String, db: String, schema: String?, warehouse: String?, role: String?) =
             "jdbc:snowflake://$account.snowflakecomputing.com/" +
@@ -31,8 +30,8 @@ class DbRepositoryService (
             val field: String,
             val fieldType: String)
 
-    fun loadTableMetaData() {
-        val jdbcConnectionString = buildJsbcConnectionString(host, db, schema, warehouse, role)
+    fun loadTableMetaData(): List<DbTable> {
+        val jdbcConnectionString = buildJsbcConnectionString(account, db, schema, warehouse, role)
         val statement =
                 """
                 select table_catalog as database_name, 
@@ -44,6 +43,7 @@ class DbRepositoryService (
                 where table_schema != 'INFORMATION_SCHEMA'
                 order by database_name, schema_name, table_name, ordinal_position
                 """.trimIndent()
+        val result = mutableListOf<DbTable>()
         using(sessionOf(jdbcConnectionString, user, password)) { session ->
             val tableFieldList = session.list(queryOf(statement)) { row ->
                 TableFieldsMeta(
@@ -54,8 +54,9 @@ class DbRepositoryService (
                         fieldType = row.string("field_type")
                 )
             }
+            result.addAll(convert(tableFieldList))
         }
-
+        return result
     }
 
     private fun convert(tableFieldsMeta: List<TableFieldsMeta>): List<DbTable> {

@@ -2,10 +2,7 @@ package at.willhaben.dt.snowpit.view.document.fragments
 
 import at.willhaben.dt.snowpit.controller.DocumentController
 import at.willhaben.dt.snowpit.view.Icons
-import at.willhaben.dt.snowpit.view.document.model.DbtProfileListViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
-import javafx.collections.FXCollections
-import javafx.geometry.Pos
 import javafx.geometry.Side
 import javafx.scene.image.ImageView
 import tornadofx.*

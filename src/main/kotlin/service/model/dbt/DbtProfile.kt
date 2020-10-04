@@ -13,7 +13,7 @@ data class DbtTarget(
         val password: String,
         val role: String?,
         val threads: String?,
-        val database: String?,
+        val database: String,
         val warehouse: String?,
         val schema: String?
 )
