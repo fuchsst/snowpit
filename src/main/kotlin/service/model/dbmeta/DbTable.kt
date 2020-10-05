@@ -4,8 +4,11 @@ data class DbTable(
         val database: String,
         val schema: String,
         val name: String,
-        val fields: List<DbTableField>
-)
+        val fields: MutableList<DbTableField>
+) {
+    val qualifiedName:String
+        get() = "$schema.$name"
+}
 
 data class DbTableField(
         val name: String,

@@ -6,12 +6,15 @@ import at.willhaben.dt.snowpit.controller.MetadataController
 import at.willhaben.dt.snowpit.controller.PreferencesController
 import at.willhaben.dt.snowpit.view.document.fragments.DtSpecDocumentFragment
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
+import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.TabPane
 import javafx.scene.image.ImageView
+import javafx.stage.Modality
 import tornadofx.*
+import java.util.logging.Level
 
 class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIcon)) {
 
@@ -26,6 +29,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
     init {
         try {
             metadataController.reloadProfiles()
+            metadataController.reloadTargets()
         } catch (e: Exception) {
             alert(
                     type = Alert.AlertType.ERROR,
@@ -125,27 +129,46 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
                 ) {
                     alignment = Pos.CENTER_LEFT
                 }.setOnAction {
-                    preferencesController.save()
+                    try {
+                        preferencesController.save()
+                    } catch (npe: NullPointerException) {
+                        log.log(Level.WARNING, "NPE when trying to save preferences targetsCombobox.onAction")
+                    }
+
                 }
                 button(text = "Fetch/Refresh Metadata", graphic = ImageView(Icons.IconConnect)) {
                     enableWhen { preferencesController.dbtProfileTargetProperty.isNotNull }
                 }.action {
-                    try {
-                        metadataController.reloadDbTableMetadata()
-                    } catch (e: Exception) {
-                        alert(
-                                type = Alert.AlertType.ERROR,
-                                title = "Failed loading DB table metadata for profile target " +
-                                        "${preferencesController.dbtProfile}.${preferencesController.dbtProfileTarget}!",
-                                header = e.message ?: e.toString(),
-                                content = "Check preferences to configure the dbt_profiles.yml location and profile " +
-                                        "and check in the dbt_profiles.yml that the target is configured correctly.",
-                                buttons = arrayOf(ButtonType.OK)
-                        )
-                    }
+                    handleRefreshTableMetadata()
                 }
             }
             this += tabPane.apply { fitToParentSize() }
+        }
+    }
+
+    private fun handleRefreshTableMetadata() {
+        try {
+            metadataController.reloadDbTableMetadata()
+
+            val numSchemas = metadataController.dbTableMetadataList.map { it.schema }.distinct().count()
+            val numTables = metadataController.dbTableMetadataList.map { it.schema + "." + it.name }.distinct().count()
+            val dbName = metadataController.dbTableMetadataList.first().database
+
+            alert(
+                    type = Alert.AlertType.INFORMATION,
+                    title = "Metadata loaded",
+                    header = "Loaded Table Metadata from ${preferencesController.dbtProfile}.${preferencesController.dbtProfileTarget}",
+                    content = "Fetched $numTables tables in $numSchemas schemas from database $dbName"
+            )
+        } catch (e: Exception) {
+            alert(
+                    type = Alert.AlertType.ERROR,
+                    title = "Failed loading DB table metadata for profile target " +
+                            "${preferencesController.dbtProfile}.${preferencesController.dbtProfileTarget}!",
+                    header = e.message ?: e.toString(),
+                    content = "Check preferences to configure the dbt_profiles.yml location and profile " +
+                            "and check in the dbt_profiles.yml that the target is configured correctly."
+            )
         }
     }
 
@@ -154,7 +177,11 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
     }
 
     private fun menuItemPreferencesHandler() {
-        preferencesView.openModal(owner = this.currentWindow)
+        preferencesView.openModal(
+                owner = this.currentWindow,
+                modality = Modality.APPLICATION_MODAL,
+                escapeClosesWindow = true,
+                block = true)
         metadataController.reloadTargets()
     }
 

@@ -1,6 +1,8 @@
 package at.willhaben.dt.snowpit.service
 
 import at.willhaben.dt.snowpit.service.model.dbmeta.DbTable
+import at.willhaben.dt.snowpit.service.model.dbmeta.DbTableField
+import at.willhaben.dt.snowpit.service.model.dbmeta.DbTableFieldType
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import kotliquery.using
@@ -15,7 +17,7 @@ class DbRepositoryService(
         private val role: String? = null
 ) {
 
-    private fun buildJsbcConnectionString(account: String, db: String, schema: String?, warehouse: String?, role: String?) =
+    private fun buildJdbcConnectionString(account: String, db: String, schema: String?, warehouse: String?, role: String?) =
             "jdbc:snowflake://$account.snowflakecomputing.com/" +
                     "?db=$db" +
                     (if (schema != null) "&schema=$schema" else "") +
@@ -31,7 +33,7 @@ class DbRepositoryService(
             val fieldType: String)
 
     fun loadTableMetaData(): List<DbTable> {
-        val jdbcConnectionString = buildJsbcConnectionString(account, db, schema, warehouse, role)
+        val jdbcConnectionString = buildJdbcConnectionString(account, db, schema, warehouse, role)
         val statement =
                 """
                 select table_catalog as database_name, 
@@ -41,26 +43,61 @@ class DbRepositoryService(
                        data_type as field_type
                 from information_schema.columns
                 where table_schema != 'INFORMATION_SCHEMA'
-                order by database_name, schema_name, table_name, ordinal_position
+                order by table_catalog, table_schema, table_name, ordinal_position
                 """.trimIndent()
         val result = mutableListOf<DbTable>()
         using(sessionOf(jdbcConnectionString, user, password)) { session ->
             val tableFieldList = session.list(queryOf(statement)) { row ->
                 TableFieldsMeta(
-                        database = row.string("database_name"),
-                        schema = row.string("schema_name"),
-                        table = row.string("table_name"),
-                        field = row.string("field_name"),
-                        fieldType = row.string("field_type")
+                        database = row.string("DATABASE_NAME"),
+                        schema = row.string("SCHEMA_NAME"),
+                        table = row.string("TABLE_NAME"),
+                        field = row.string("FIELD_NAME"),
+                        fieldType = row.string("FIELD_TYPE")
                 )
             }
-            result.addAll(convert(tableFieldList))
+            result.addAll(tableFieldList.convert())
         }
-        return result
+        return result.toList()
     }
 
-    private fun convert(tableFieldsMeta: List<TableFieldsMeta>): List<DbTable> {
-        TODO("Convert Table/Field List to DbTable objects")
+    private fun List<TableFieldsMeta>.convert(): List<DbTable> {
+        var previousQualifiedTable = "."
+        val resultList = mutableListOf<DbTable>()
+        var currentDbTable: DbTable? = null
+        this.forEach {
+            if ("${it.schema}.${it.table}" != previousQualifiedTable) {
+                previousQualifiedTable = "${it.schema}.${it.table}"
+                if (currentDbTable != null) {
+                    resultList.add(currentDbTable as DbTable)
+                }
+                currentDbTable = DbTable(
+                        database = it.database,
+                        schema = it.schema,
+                        name = it.table,
+                        fields = mutableListOf(DbTableField(name = it.field, type = convertDbFieldType(it.fieldType))))
+            } else {
+                currentDbTable?.fields?.add(DbTableField(name = it.field, type = convertDbFieldType(it.fieldType)))
+            }
+        }
+        if (currentDbTable != null) {
+            resultList.add(currentDbTable as DbTable)
+        }
+        return resultList.toList()
     }
+
+    private fun convertDbFieldType(fieldType: String): DbTableFieldType =
+            when (fieldType.toUpperCase()) {
+                in listOf("NUMBER", "DECIMAL", "NUMERIC",
+                        "INT", "INTEGER", "BIGINT", "SMALLINT", "TINYINT", "BYTEINT",
+                        "FLOAT", "FLOAT4", "FLOAT8",
+                        "DOUBLE", "DOUBLE PRECISION", "REAL") -> DbTableFieldType.number
+                in listOf("DATE") -> DbTableFieldType.date
+                in listOf("DATETIME", "TIME", "TIMESTAMP",
+                        "TIMESTAMP_LTZ", "TIMESTAMP_NTZ", "TIMESTAMP_TZ") -> DbTableFieldType.datetime
+                in listOf("VARIANT", "OBJECT", "ARRAY") -> DbTableFieldType.variant
+                else -> DbTableFieldType.string
+            }
+
 
 }

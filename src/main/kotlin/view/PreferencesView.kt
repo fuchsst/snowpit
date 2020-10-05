@@ -5,6 +5,7 @@ import at.willhaben.dt.snowpit.controller.PreferencesController
 import javafx.scene.image.ImageView
 import javafx.stage.FileChooser
 import tornadofx.*
+import java.io.File
 
 class PreferencesView : View("Preferences", ImageView(Icons.IconPreferences)) {
 
@@ -18,13 +19,14 @@ class PreferencesView : View("Preferences", ImageView(Icons.IconPreferences)) {
     override val root = form {
         prefWidth = 1000.0
         fieldset("dbt Profiles Yaml") {
+            text(controller.dbtProfilesYamlPathProperty)
             field("Choose file") {
-                button(graphic = ImageView(Icons.IconDbt)).action {
+                button(text="profiles.yml", graphic = ImageView(Icons.IconDbt)).action {
                     val fileChooser = FileChooser().apply {
                         extensionFilters.add(FileChooser.ExtensionFilter("dbt Profile Yaml", "profiles.yml"))
                         title = "Choose dbt Profiles Yaml..."
                     }
-
+                    fileChooser.initialDirectory = File(File(controller.dbtProfilesYamlPath).parent)
                     val file = fileChooser.showOpenDialog(null)
                     if (file != null) {
                         controller.dbtProfilesYamlPath = file.absolutePath
@@ -32,7 +34,6 @@ class PreferencesView : View("Preferences", ImageView(Icons.IconPreferences)) {
                     }
                 }
             }
-            text(controller.dbtProfilesYamlPathProperty)
             field("Profile") {
                 combobox<String>(
                         property = controller.dbtProfileProperty,
@@ -49,9 +50,8 @@ class PreferencesView : View("Preferences", ImageView(Icons.IconPreferences)) {
             }
         }
         hbox {
-            button("Cancel").action {
+            button("Reset").action {
                 controller.load() // reload from disk to restore old settings
-                close()
             }
             button("OK").action {
                 controller.save()

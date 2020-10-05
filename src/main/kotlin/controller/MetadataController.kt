@@ -32,6 +32,7 @@ class MetadataController : Controller() {
             if (profile != null) {
                 dbtProfileList.removeIf { !profiles.contains(it) }
                 dbtProfileList.addAll(profiles.map { it.name }.filterNot { dbtProfileList.contains(it) })
+                dbtProfileList.sort()
             } else {
                 throw DbtProfileException("The configured Profile '${preferencesController.dbtProfile}' not found in '${preferencesController.dbtProfilesYamlPath}'!")
             }
@@ -44,10 +45,11 @@ class MetadataController : Controller() {
         val profiles = dbtProfilesService.loadTargetProfiles(preferencesController.dbtProfilesYamlPath)
         val activeProfile = profiles.firstOrNull { it.name == preferencesController.dbtProfile }
 
-        dbtProfileTargetList.clear()
         if (activeProfile != null) {
-            val dbtTargetViewModels = activeProfile.outputs.map { it.key }
-            dbtProfileTargetList.addAll(dbtTargetViewModels)
+            val dbtTargets = activeProfile.outputs.map { it.key }
+            dbtProfileTargetList.removeIf { !dbtTargets.contains(it) }
+            dbtProfileTargetList.addAll(dbtTargets.filterNot { dbtProfileTargetList.contains(it) })
+            dbtProfileTargetList.sort()
         }
     }
 
