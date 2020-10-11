@@ -1,6 +1,8 @@
 package at.willhaben.dt.snowpit.controller
 
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
 import tornadofx.*
 
@@ -12,17 +14,20 @@ class PreferencesController : Controller() {
         private val KEY_DBT_PROFILE = "dbt_profile"
         private val KEY_DBT_TARGET = "dbt_profile_target"
         private val KEY_QUALIFY_TABLE_NAMES = "qualify_table_names"
+        private val KEY_FONT_SIZE = "font_size"
     }
 
     val dbtProfilesYamlPathProperty = SimpleStringProperty()
     val dbtProfileProperty = SimpleStringProperty()
     val dbtProfileTargetProperty = SimpleStringProperty()
     val qualifyTableNamesProperty = SimpleBooleanProperty()
+    val fontSizeProperty = SimpleIntegerProperty()
 
     var dbtProfilesYamlPath by dbtProfilesYamlPathProperty
     var dbtProfile by dbtProfileProperty
     var dbtProfileTarget by dbtProfileTargetProperty
     var qualifyTableNames by qualifyTableNamesProperty
+    var fontSize by fontSizeProperty
 
 
     init {
@@ -35,6 +40,7 @@ class PreferencesController : Controller() {
             dbtProfile = get(KEY_DBT_PROFILE, "default")
             dbtProfileTarget = get(KEY_DBT_TARGET, "default")
             qualifyTableNames = getBoolean(KEY_QUALIFY_TABLE_NAMES, true)
+            fontSize = getInt(KEY_FONT_SIZE, 24)
         }
     }
 
@@ -44,6 +50,7 @@ class PreferencesController : Controller() {
             put(KEY_DBT_PROFILE, dbtProfile)
             put(KEY_DBT_TARGET, dbtProfileTarget)
             putBoolean(KEY_QUALIFY_TABLE_NAMES, qualifyTableNames)
+            putInt(KEY_FONT_SIZE, fontSize)
             flush()
         }
     }

@@ -19,6 +19,7 @@ enum class DbTableFieldType {
     string,
     number,
     date,
+    time,
     datetime,
     variant
 }

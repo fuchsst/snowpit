@@ -7,14 +7,27 @@ import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.beans.InvalidationListener
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleObjectProperty
+import javafx.event.EventHandler
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
+import javafx.scene.control.ContextMenu
 import tornadofx.*
 
 class TargetController : Controller() {
     val dtSpecViewModel: DtSpecViewModel by inject()
+    val metadataController: MetadataController by inject()
 
     val selectedTarget = SimpleObjectProperty<DtSpecTargetViewModel>()
+
+    val schemaContextMenu = ContextMenu().apply {
+        this.items.addAll(metadataController.buildTableContextMenu(selectedTarget?.value?.targetProperty))
+        this.onShowing = EventHandler {
+            this.items.clear()
+            this.items.addAll(metadataController.buildTableContextMenu(selectedTarget?.value?.targetProperty))
+        }
+    }
+
+
 
     val selectedColumnIdentifierMapping: SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>
         get() = selectedTarget.value.identifierMapProperty

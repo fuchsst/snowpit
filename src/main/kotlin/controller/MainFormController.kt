@@ -14,9 +14,6 @@ import java.io.File
 class MainFormController : Controller() {
 
     private val dtSpecYamlService = DtSpecYamlService()
-    private val preferencesController: PreferencesController by inject()
-    private val metadataController: MetadataController by inject()
-
 
     val selectedTargetProperty = SimpleStringProperty()
     var selectedTarget by selectedTargetProperty

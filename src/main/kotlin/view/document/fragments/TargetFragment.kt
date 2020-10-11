@@ -1,5 +1,6 @@
 package at.willhaben.dt.snowpit.view.document.fragments
 
+import at.willhaben.dt.snowpit.controller.SourceController
 import at.willhaben.dt.snowpit.controller.TargetController
 import at.willhaben.dt.snowpit.service.isValidQualifiedName
 import at.willhaben.dt.snowpit.view.Icons
@@ -10,7 +11,7 @@ import tornadofx.*
 
 class TargetFragment : Fragment() {
 
-    private val controller: TargetController by inject()
+    private val controller = find<TargetController>(scope)
 
     override val root = hbox {
         vbox {
@@ -43,7 +44,9 @@ class TargetFragment : Fragment() {
                     paddingAll = 4.0
                     label(text = "Target Table: ") { alignment = Pos.CENTER_LEFT }
                     val targetNameTextfield = textfield() {
+                        prefWidth = 768.0
                         filterInput { it.controlNewText.isValidQualifiedName() }
+                        contextMenu = controller.schemaContextMenu
                     }
 
                     targetsListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->

@@ -93,7 +93,8 @@ class DbRepositoryService(
                         "FLOAT", "FLOAT4", "FLOAT8",
                         "DOUBLE", "DOUBLE PRECISION", "REAL") -> DbTableFieldType.number
                 in listOf("DATE") -> DbTableFieldType.date
-                in listOf("DATETIME", "TIME", "TIMESTAMP",
+                in listOf("TIME") -> DbTableFieldType.time
+                in listOf("DATETIME", "TIMESTAMP",
                         "TIMESTAMP_LTZ", "TIMESTAMP_NTZ", "TIMESTAMP_TZ") -> DbTableFieldType.datetime
                 in listOf("VARIANT", "OBJECT", "ARRAY") -> DbTableFieldType.variant
                 else -> DbTableFieldType.string

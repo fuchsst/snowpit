@@ -6,6 +6,11 @@ import at.willhaben.dt.snowpit.service.DbRepositoryService
 import at.willhaben.dt.snowpit.service.DbtProfilesService
 import at.willhaben.dt.snowpit.view.document.model.DbTableMetadataViewModel
 import javafx.beans.property.SimpleListProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.collections.ObservableList
+import javafx.event.EventHandler
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuItem
 import tornadofx.*
 import java.io.File
 
@@ -20,8 +25,7 @@ class MetadataController : Controller() {
     val dbtProfileTargetListProperty = SimpleListProperty(mutableListOf<String>().asObservable())
     var dbtProfileTargetList by dbtProfileTargetListProperty
 
-    val dbTableMetadataListProperty = SimpleListProperty(mutableListOf<DbTableMetadataViewModel>().asObservable())
-    var dbTableMetadataList by dbTableMetadataListProperty
+    val dbTableMetadataList = mutableListOf<DbTableMetadataViewModel>().asObservable()
 
 
     fun reloadProfiles() {
@@ -53,7 +57,7 @@ class MetadataController : Controller() {
         }
     }
 
-    fun reloadDbTableMetadata() {
+    fun reloadDbTableMetadata(): ObservableList<DbTableMetadataViewModel> {
         val profiles = dbtProfilesService.loadTargetProfiles(preferencesController.dbtProfilesYamlPath)
         val activeProfile = profiles.firstOrNull { it.name == preferencesController.dbtProfile }
         val activeTarget =
@@ -73,7 +77,40 @@ class MetadataController : Controller() {
                     warehouse = activeTarget.warehouse,
                     role = activeTarget.role
             )
-            dbTableMetadataList.addAll(dbRepositoryService.loadTableMetaData().map { it.convert() })
+            val schemaTablesMap = dbRepositoryService
+                    .loadTableMetaData()
+                    .map { it.convert() }
+            dbTableMetadataList.addAll(schemaTablesMap)
+        }
+        return dbTableMetadataList
+    }
+
+    fun buildTableContextMenu(targetTextProperty: SimpleStringProperty?): List<MenuItem> {
+        return if (dbTableMetadataList.isNotEmpty()) {
+            dbTableMetadataList
+                    .map { dbTableModel ->
+                        dbTableModel.schema.toLowerCase()
+                    }.distinct()
+                    .map { schemaName ->
+                        Menu(schemaName).apply {
+                            isMnemonicParsing = false
+                            items.addAll(
+                                    dbTableMetadataList
+                                            .filter { it.schema.toLowerCase() == schemaName }
+                                            .map { dbTableModel ->
+                                                MenuItem(dbTableModel.name.toLowerCase())
+                                                        .apply {
+                                                            isMnemonicParsing = false
+                                                            onAction = EventHandler {
+                                                                targetTextProperty?.value = "$schemaName.${dbTableModel.name.toLowerCase()}"
+                                                            }
+                                                        }
+                                            }
+                            )
+                        }
+                    }
+        } else {
+            listOf(MenuItem("<No Metadata available>").apply { isDisable = true })
         }
     }
 }

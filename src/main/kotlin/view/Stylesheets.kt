@@ -1,16 +1,19 @@
 package at.willhaben.dt.snowpit.view
 
+import at.willhaben.dt.snowpit.controller.PreferencesController
 import tornadofx.*
 
 class GlobalStylesheet : Stylesheet() {
-
-    companion object {
-        private val defaultFontSize = 24.px
-    }
+    val preferencesController = find<PreferencesController>()
 
     init {
+        preferencesController.fontSizeProperty.addListener { _ -> fontSizeChangeListener() }
+        fontSizeChangeListener()
+    }
+
+    fun fontSizeChangeListener() {
         s(form) {
-            fontSize = defaultFontSize
+            fontSize = preferencesController.fontSize.px
         }
     }
 }

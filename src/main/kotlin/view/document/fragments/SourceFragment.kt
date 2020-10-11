@@ -9,8 +9,7 @@ import javafx.scene.image.ImageView
 import tornadofx.*
 
 class SourceFragment : Fragment() {
-
-    private val controller: SourceController by inject()
+    private val controller = find<SourceController>(scope)
 
     override val root = hbox {
         vbox {
@@ -42,8 +41,10 @@ class SourceFragment : Fragment() {
                 hbox {
                     paddingAll = 4.0
                     label(text = "Source Table: ") { alignment = Pos.CENTER_LEFT }
-                    val sourceNameTextfield = textfield() {
+                    val sourceNameTextfield = textfield {
+                        prefWidth = 768.0
                         filterInput { it.controlNewText.isValidQualifiedName() }
+                        contextMenu = controller.schemaContextMenu
                     }
 
                     sourcesListView.selectionModel.selectedItemProperty().addListener { _, oldItem, newItem ->

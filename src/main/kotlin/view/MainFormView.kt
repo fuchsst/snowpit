@@ -6,7 +6,6 @@ import at.willhaben.dt.snowpit.controller.MetadataController
 import at.willhaben.dt.snowpit.controller.PreferencesController
 import at.willhaben.dt.snowpit.view.document.fragments.DtSpecDocumentFragment
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
-import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
@@ -18,11 +17,11 @@ import java.util.logging.Level
 
 class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIcon)) {
 
-    private val metadataController: MetadataController by inject()
-    private val preferencesController: PreferencesController by inject()
-    private val mainFormController: MainFormController by inject()
+    private val metadataController: MetadataController by inject(scope)
+    private val preferencesController: PreferencesController by inject(scope)
+    private val mainFormController: MainFormController by inject(scope)
 
-    private val preferencesView: PreferencesView by inject()
+    private val preferencesView: PreferencesView by inject(scope)
 
     private val tabPane = TabPane().apply { fitToParentWidth() }
 
@@ -59,7 +58,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
                     menuItemSaveHandler()
                 }
 
-                item(name = "Save as ...", keyCombination = "Shift+Shortcut+N", graphic = ImageView(Icons.IconSaveAs)).action {
+                item(name = "Save as ...", keyCombination = "Shift+Shortcut+S", graphic = ImageView(Icons.IconSaveAs)).action {
                     menuItemSaveAsHandler()
                 }
 
@@ -150,8 +149,8 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
         try {
             metadataController.reloadDbTableMetadata()
 
-            val numSchemas = metadataController.dbTableMetadataList.map { it.schema }.distinct().count()
-            val numTables = metadataController.dbTableMetadataList.map { it.schema + "." + it.name }.distinct().count()
+            val numSchemas = metadataController.dbTableMetadataList.count()
+            val numTables = metadataController.dbTableMetadataList.count()
             val dbName = metadataController.dbTableMetadataList.first().database
 
             alert(
@@ -207,7 +206,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
         if (dtSpecYamlViewModel != null) {
             val newTab = tabPane.tab("<${dtSpecYamlViewModel.filename}> *")
             newTab.userData = dtSpecYamlViewModel
-            newTab.add(DtSpecDocumentFragment(dtSpecYamlViewModel))
+            newTab.add(DtSpecDocumentFragment(scope, dtSpecYamlViewModel))
             newTab.select()
         }
     }
@@ -217,7 +216,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
         val dtSpecYamlViewModel = mainFormController.newFile("$name.yml")
         val newTab = tabPane.tab("<$name> *")
         newTab.userData = dtSpecYamlViewModel
-        newTab.add(DtSpecDocumentFragment(dtSpecYamlViewModel))
+        newTab.add(DtSpecDocumentFragment(scope, dtSpecYamlViewModel))
         newTab.select()
     }
 }
