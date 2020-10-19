@@ -4,6 +4,7 @@ import at.willhaben.dt.snowpit.controller.SourceController
 import at.willhaben.dt.snowpit.service.isValidQualifiedName
 import at.willhaben.dt.snowpit.view.Icons
 import at.willhaben.dt.snowpit.view.document.model.DtSpecColumnIdentifierMappingViewModel
+import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.image.ImageView
 import tornadofx.*
@@ -12,6 +13,7 @@ class SourceFragment : Fragment() {
     private val controller = find<SourceController>(scope)
 
     override val root = hbox {
+        prefHeight=768.0
         vbox {
             button(graphic = ImageView(Icons.IconAddTable)) {
                 tooltip("Add Source")
@@ -30,12 +32,13 @@ class SourceFragment : Fragment() {
 
             val sourcesListView = listview(controller.dtSpecViewModel.sources) {
                 prefWidth = 512.0
-                maxHeight = 256.0
+                fitToParentHeight()
                 cellFormat { text = it.source }
                 bindSelected(controller.selectedSource)
             }
 
             vbox {
+                prefHeight = 768.0
                 paddingAll = 4.0
                 visibleWhen { controller.selectedSource.isNotNull }
                 hbox {
@@ -75,8 +78,10 @@ class SourceFragment : Fragment() {
                         }
                     }
                     val identifierAttributesTable = tableview<DtSpecColumnIdentifierMappingViewModel> {
+                        prefHeight=512.0
                         prefWidth = 768.0
                         isEditable = true
+                        contextMenu = controller.tableFieldContextMenu
 
                         column("Column", DtSpecColumnIdentifierMappingViewModel::column) {
                             prefWidth = 384.0
@@ -91,6 +96,7 @@ class SourceFragment : Fragment() {
                         }.useComboBox(controller.availableIdentifierAttributes)
 
                         bindSelected(controller.selectedIdentifierMapViewModel)
+
                         columnResizePolicy = SmartResize.POLICY
                     }
 

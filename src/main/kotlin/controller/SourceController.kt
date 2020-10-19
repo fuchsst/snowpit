@@ -17,22 +17,32 @@ class SourceController : Controller() {
     val dtSpecViewModel: DtSpecViewModel by inject()
     val metadataController: MetadataController by inject()
 
+    val selectedSource = SimpleObjectProperty<DtSpecSourceViewModel>()
+
     val schemaContextMenu = ContextMenu().apply {
-        this.items.addAll(metadataController.buildTableContextMenu(selectedSource?.value?.sourceProperty))
+        this.items.addAll(metadataController.buildTableContextMenu(selectedSource.value?.sourceProperty))
         this.onShowing = EventHandler {
             this.items.clear()
-            this.items.addAll(metadataController.buildTableContextMenu(selectedSource?.value?.sourceProperty))
+            this.items.addAll(metadataController.buildTableContextMenu(selectedSource.value?.sourceProperty))
         }
     }
 
-    val selectedSource = SimpleObjectProperty<DtSpecSourceViewModel>()
+    val tableFieldContextMenu = ContextMenu().apply {
+        this.items.addAll(metadataController.buildTableFieldContextMenu(selectedSource.value?.source, selectedIdentifierMapViewModel, selectedColumnIdentifierMapping))
+        this.onShowing = EventHandler {
+            this.items.clear()
+            this.items.addAll(metadataController.buildTableFieldContextMenu(selectedSource.value?.source, selectedIdentifierMapViewModel,selectedColumnIdentifierMapping))
 
-    val selectedColumnIdentifierMapping: SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>
-        get() = selectedSource.value.identifierMapProperty
+        }
+    }
+
+    val selectedColumnIdentifierMapping: SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>?
+        get() = selectedSource.value?.identifierMapProperty
 
     val selectedIdentifierMapViewModel = SimpleObjectProperty<DtSpecColumnIdentifierMappingViewModel>()
 
     val availableIdentifierAttributes = mutableListOf<DtSpecIdentifierAttributeMappingViewModel>().asObservable()
+
 
     init {
         val identifierListListener = InvalidationListener {
@@ -78,9 +88,9 @@ class SourceController : Controller() {
     }
 
     fun addSourceFieldMapping() {
-        selectedColumnIdentifierMapping.add(
+        selectedColumnIdentifierMapping?.add(
                 DtSpecColumnIdentifierMappingViewModel(
-                        column = "column_${selectedColumnIdentifierMapping.size}",
+                        column = "column_${selectedColumnIdentifierMapping?.size ?: 0}",
                         identifier = DtSpecIdentifierAttributeMappingViewModel(
                                 identifier = dtSpecViewModel.identifiers.firstOrNull(),
                                 attribute = dtSpecViewModel.identifiers.firstOrNull()?.attributes?.firstOrNull()
@@ -90,7 +100,7 @@ class SourceController : Controller() {
     }
 
     fun removeSourceFieldMapping() {
-        selectedColumnIdentifierMapping.remove(selectedIdentifierMapViewModel.value)
+        selectedColumnIdentifierMapping?.remove(selectedIdentifierMapViewModel.value)
     }
 
     fun DtSpecSourceViewModel.isSourceUsed(): Boolean =

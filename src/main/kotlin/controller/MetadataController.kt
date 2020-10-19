@@ -5,7 +5,10 @@ import at.willhaben.dt.snowpit.converter.convert
 import at.willhaben.dt.snowpit.service.DbRepositoryService
 import at.willhaben.dt.snowpit.service.DbtProfilesService
 import at.willhaben.dt.snowpit.view.document.model.DbTableMetadataViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecColumnIdentifierMappingViewModel
+import at.willhaben.dt.snowpit.view.document.model.DtSpecIdentifierAttributeMappingViewModel
 import javafx.beans.property.SimpleListProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
@@ -86,31 +89,58 @@ class MetadataController : Controller() {
     }
 
     fun buildTableContextMenu(targetTextProperty: SimpleStringProperty?): List<MenuItem> {
-        return if (dbTableMetadataList.isNotEmpty()) {
-            dbTableMetadataList
-                    .map { dbTableModel ->
-                        dbTableModel.schema.toLowerCase()
-                    }.distinct()
-                    .map { schemaName ->
-                        Menu(schemaName).apply {
-                            isMnemonicParsing = false
-                            items.addAll(
-                                    dbTableMetadataList
-                                            .filter { it.schema.toLowerCase() == schemaName }
-                                            .map { dbTableModel ->
-                                                MenuItem(dbTableModel.name.toLowerCase())
-                                                        .apply {
-                                                            isMnemonicParsing = false
-                                                            onAction = EventHandler {
-                                                                targetTextProperty?.value = "$schemaName.${dbTableModel.name.toLowerCase()}"
-                                                            }
+        return dbTableMetadataList
+                .map { dbTableModel ->
+                    dbTableModel.schema.toLowerCase()
+                }.distinct()
+                .map { schemaName ->
+                    Menu(schemaName).apply {
+                        isMnemonicParsing = false
+                        items.addAll(
+                                dbTableMetadataList
+                                        .filter { it.schema.toLowerCase() == schemaName }
+                                        .map { dbTableModel ->
+                                            MenuItem(dbTableModel.name.toLowerCase())
+                                                    .apply {
+                                                        isMnemonicParsing = false
+                                                        onAction = EventHandler {
+                                                            targetTextProperty?.value = "$schemaName.${dbTableModel.name.toLowerCase()}"
                                                         }
-                                            }
-                            )
-                        }
+                                                    }
+                                        }
+                        )
                     }
-        } else {
-            listOf(MenuItem("<No Metadata available>").apply { isDisable = true })
-        }
+                }
+                .ifEmpty {
+                    listOf(MenuItem("<No Metadata available>").apply { isDisable = true })
+                }
+
+    }
+
+    fun buildTableFieldContextMenu(qualifiedTableName: String?,
+                                   targetColIdMappingProperty: SimpleObjectProperty<DtSpecColumnIdentifierMappingViewModel>?,
+                                   targetParentColIdMappingListProperty:SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>?): List<MenuItem> {
+        return dbTableMetadataList
+                .filter { it.qualifiedTableName == qualifiedTableName }
+                .flatMap {
+                    it.fields.map { field ->
+                        MenuItem(field.name.toLowerCase())
+                                .apply {
+                                    isMnemonicParsing = false
+                                    onAction = EventHandler {
+                                        targetParentColIdMappingListProperty?.add(
+                                                DtSpecColumnIdentifierMappingViewModel(
+                                                        column = field.name.toLowerCase(),
+                                                        identifier = DtSpecIdentifierAttributeMappingViewModel(null,null)
+                                                )
+                                        )
+                                    }
+                                }
+                    }
+                }
+                .ifEmpty {
+                    listOf(MenuItem("<No Metadata available>").apply { isDisable = true })
+                }
+
     }
 }

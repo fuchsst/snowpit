@@ -83,7 +83,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
             }
         }
         vbox {
-            fitToParentWidth()
+            fitToParentSize()
             hbox {
 
                 buttonbar {
@@ -120,7 +120,6 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
 
             }
             hbox(spacing = 8) {
-
                 label(text = "Target: ")
                 val targetsCombobox = combobox<String>(
                         property = preferencesController.dbtProfileTargetProperty,

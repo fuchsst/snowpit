@@ -20,17 +20,25 @@ class TargetController : Controller() {
     val selectedTarget = SimpleObjectProperty<DtSpecTargetViewModel>()
 
     val schemaContextMenu = ContextMenu().apply {
-        this.items.addAll(metadataController.buildTableContextMenu(selectedTarget?.value?.targetProperty))
+        this.items.addAll(metadataController.buildTableContextMenu(selectedTarget.value?.targetProperty))
         this.onShowing = EventHandler {
             this.items.clear()
-            this.items.addAll(metadataController.buildTableContextMenu(selectedTarget?.value?.targetProperty))
+            this.items.addAll(metadataController.buildTableContextMenu(selectedTarget.value?.targetProperty))
+        }
+    }
+
+    val tableFieldContextMenu = ContextMenu().apply {
+        this.items.addAll(metadataController.buildTableFieldContextMenu(selectedTarget.value?.target, selectedIdentifierMapViewModel, selectedColumnIdentifierMapping))
+        this.onShowing = EventHandler {
+            this.items.clear()
+            this.items.addAll(metadataController.buildTableFieldContextMenu(selectedTarget.value?.target, selectedIdentifierMapViewModel,selectedColumnIdentifierMapping))
+
         }
     }
 
 
-
-    val selectedColumnIdentifierMapping: SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>
-        get() = selectedTarget.value.identifierMapProperty
+    val selectedColumnIdentifierMapping: SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>?
+        get() = selectedTarget.value?.identifierMapProperty
 
     val selectedIdentifierMapViewModel = SimpleObjectProperty<DtSpecColumnIdentifierMappingViewModel>()
 
@@ -80,9 +88,9 @@ class TargetController : Controller() {
     }
 
     fun addTargetFieldMapping() {
-        selectedColumnIdentifierMapping.add(
+        selectedColumnIdentifierMapping?.add(
                 DtSpecColumnIdentifierMappingViewModel(
-                        column = "column_${selectedColumnIdentifierMapping.size}",
+                        column = "column_${selectedColumnIdentifierMapping?.size}",
                         identifier = DtSpecIdentifierAttributeMappingViewModel(
                                 identifier = dtSpecViewModel.identifiers.firstOrNull(),
                                 attribute = dtSpecViewModel.identifiers.firstOrNull()?.attributes?.firstOrNull()
@@ -92,7 +100,7 @@ class TargetController : Controller() {
     }
 
     fun removeTargetFieldMapping() {
-        selectedColumnIdentifierMapping.remove(selectedIdentifierMapViewModel.value)
+        selectedColumnIdentifierMapping?.remove(selectedIdentifierMapViewModel.value)
     }
 
 

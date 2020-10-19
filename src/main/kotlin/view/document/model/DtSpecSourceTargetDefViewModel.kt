@@ -8,7 +8,7 @@ import tornadofx.*
 
 
 class DtSpecSourceViewModel(source: String,
-                            columnIdentifierMapping: ObservableList<DtSpecColumnIdentifierMappingViewModel>) {
+                            columnIdentifierMapping: ObservableList<DtSpecColumnIdentifierMappingViewModel>) : ViewModel() {
 
     val sourceProperty = SimpleStringProperty(source)
     val identifierMapProperty = SimpleListProperty(columnIdentifierMapping)
@@ -18,7 +18,7 @@ class DtSpecSourceViewModel(source: String,
 }
 
 class DtSpecTargetViewModel(target: String,
-                            columnIdentifierMapping: ObservableList<DtSpecColumnIdentifierMappingViewModel>) {
+                            columnIdentifierMapping: ObservableList<DtSpecColumnIdentifierMappingViewModel>) : ViewModel() {
 
     val targetProperty = SimpleStringProperty(target)
     val identifierMapProperty = SimpleListProperty(columnIdentifierMapping)
@@ -28,7 +28,7 @@ class DtSpecTargetViewModel(target: String,
 }
 
 class DtSpecColumnIdentifierMappingViewModel(column: String,
-                                             identifier: DtSpecIdentifierAttributeMappingViewModel) {
+                                             identifier: DtSpecIdentifierAttributeMappingViewModel) : ViewModel() {
 
     val columnProperty = SimpleStringProperty(column)
     val identifierProperty = SimpleObjectProperty(identifier)
@@ -38,7 +38,7 @@ class DtSpecColumnIdentifierMappingViewModel(column: String,
 }
 
 class DtSpecIdentifierAttributeMappingViewModel(identifier: DtSpecIdentifierViewModel?,
-                                                attribute: DtSpecIdentifierAttributeViewModel?) {
+                                                attribute: DtSpecIdentifierAttributeViewModel?) : ViewModel() {
 
     val identifierProperty = SimpleObjectProperty(identifier)
     val attributeProperty = SimpleObjectProperty(attribute)

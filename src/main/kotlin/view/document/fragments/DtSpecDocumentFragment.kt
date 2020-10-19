@@ -16,7 +16,7 @@ class DtSpecDocumentFragment(fragmentScope: Scope, dtSpecViewModel: DtSpecViewMo
         fitToParentSize()
 
         vbox(spacing = 16) {
-            fitToParentWidth()
+            fitToParentSize()
 
             hbox(spacing = 8) {
                 fitToParentWidth()
@@ -27,15 +27,17 @@ class DtSpecDocumentFragment(fragmentScope: Scope, dtSpecViewModel: DtSpecViewMo
             drawer(side = Side.LEFT, multiselect = true) {
                 fitToParentSize()
                 item("Identifier", expanded = true) {
-                    fitToParentSize()
                     this += find<IdentifierFragment>(fragmentScope)
                 }
-                item("Sources", expanded = true) { this += find<SourceFragment>(fragmentScope) }
-
-                item("Targets", expanded = true) { this += find<TargetFragment>(fragmentScope) }
-
-                item("Factories", expanded = true) { this += find<FactoriesFragment>(fragmentScope) }
-
+                item("Sources", expanded = true) {
+                    this += find<SourceFragment>(fragmentScope)
+                }
+                item("Targets", expanded = true) {
+                    this += find<TargetFragment>(fragmentScope)
+                }
+                item("Factories", expanded = true) {
+                    this += find<FactoriesFragment>(fragmentScope)
+                }
                 item("Scenarios", expanded = true) {
                     hbox {
                         vbox {

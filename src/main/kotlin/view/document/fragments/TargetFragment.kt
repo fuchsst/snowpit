@@ -14,6 +14,7 @@ class TargetFragment : Fragment() {
     private val controller = find<TargetController>(scope)
 
     override val root = hbox {
+        prefHeight = 768.0
         vbox {
             button(graphic = ImageView(Icons.IconAddTable)) {
                 tooltip("Add Target")
@@ -32,7 +33,7 @@ class TargetFragment : Fragment() {
 
             val targetsListView = listview(controller.dtSpecViewModel.targets) {
                 prefWidth = 512.0
-                maxHeight = 256.0
+                fitToParentHeight()
                 cellFormat { text = it.target }
                 bindSelected(controller.selectedTarget)
             }
@@ -77,8 +78,10 @@ class TargetFragment : Fragment() {
                         }
                     }
                     val identifierAttributesTable = tableview<DtSpecColumnIdentifierMappingViewModel> {
+                        prefHeight=512.0
                         prefWidth = 768.0
                         isEditable = true
+                        contextMenu = controller.tableFieldContextMenu
 
                         column("Column", DtSpecColumnIdentifierMappingViewModel::column) {
                             prefWidth = 384.0

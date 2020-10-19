@@ -20,6 +20,9 @@ class DbTableMetadataViewModel(
     var schema by schemaProperty
     var name by nameProperty
     var fields by fieldsProperty
+
+    val qualifiedTableName:String
+        get() = "${schema.toLowerCase()}.${name.toLowerCase()}"
 }
 
 

@@ -14,6 +14,7 @@ class IdentifierFragment : Fragment() {
     private val controller: IdentifierController by inject()
 
     override val root = hbox {
+        prefHeight = 768.0
         vbox {
             button(graphic = ImageView(Icons.IconAddIdentifier)) {
                 tooltip("Add Identifier")
@@ -32,7 +33,7 @@ class IdentifierFragment : Fragment() {
 
             val identifiersListView = listview(controller.dtSpecViewModel.identifiers) {
                 prefWidth = 512.0
-                maxHeight = 256.0
+                fitToParentHeight()
                 cellFormat { text = it.identifier }
                 bindSelected(controller.selectedIdentifier)
             }

@@ -12,6 +12,7 @@ class FactoriesFragment : Fragment() {
     private val controller: FactoryController by inject()
 
     override val root = hbox {
+        prefHeight = 768.0
         vbox {
             button(graphic = ImageView(Icons.IconAddFactory)) {
                 tooltip("Add Factory")
