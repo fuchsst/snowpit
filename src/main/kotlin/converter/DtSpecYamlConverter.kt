@@ -3,7 +3,7 @@ package at.willhaben.dt.snowpit.converter
 import at.willhaben.dt.snowpit.service.model.dtspec.*
 import at.willhaben.dt.snowpit.view.document.model.*
 import javafx.collections.ObservableList
-import tornadofx.*
+import tornadofx.asObservable
 
 fun DtSpecYaml.convert(filename: String): DtSpecViewModel {
     val identifiers = this.identifiers.map { it.convert() }.toMutableList().asObservable()

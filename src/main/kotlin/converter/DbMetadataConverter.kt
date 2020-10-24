@@ -4,7 +4,7 @@ import at.willhaben.dt.snowpit.service.model.dbmeta.DbTable
 import at.willhaben.dt.snowpit.service.model.dbmeta.DbTableField
 import at.willhaben.dt.snowpit.view.document.model.DbTableFieldMetadataViewModel
 import at.willhaben.dt.snowpit.view.document.model.DbTableMetadataViewModel
-import tornadofx.*
+import tornadofx.asObservable
 
 fun DbTable.convert() = DbTableMetadataViewModel(
         name = this.name,

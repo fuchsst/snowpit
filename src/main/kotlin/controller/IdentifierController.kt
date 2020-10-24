@@ -8,7 +8,9 @@ import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
-import tornadofx.*
+import tornadofx.Controller
+import tornadofx.alert
+import tornadofx.asObservable
 
 class IdentifierController : Controller() {
     val dtSpecViewModel: DtSpecViewModel by inject()

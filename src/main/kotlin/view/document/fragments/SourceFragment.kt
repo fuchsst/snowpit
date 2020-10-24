@@ -4,7 +4,6 @@ import at.willhaben.dt.snowpit.controller.SourceController
 import at.willhaben.dt.snowpit.service.isValidQualifiedName
 import at.willhaben.dt.snowpit.view.Icons
 import at.willhaben.dt.snowpit.view.document.model.DtSpecColumnIdentifierMappingViewModel
-import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.image.ImageView
 import tornadofx.*
@@ -13,7 +12,7 @@ class SourceFragment : Fragment() {
     private val controller = find<SourceController>(scope)
 
     override val root = hbox {
-        prefHeight=768.0
+        prefHeight = 768.0
         vbox {
             button(graphic = ImageView(Icons.IconAddTable)) {
                 tooltip("Add Source")
@@ -43,9 +42,9 @@ class SourceFragment : Fragment() {
                 visibleWhen { controller.selectedSource.isNotNull }
                 hbox {
                     paddingAll = 4.0
-                    label(text = "Source Table: ") { alignment = Pos.CENTER_LEFT }
+                    val sourceNameLabel = label(text = "Source Table: ") { alignment = Pos.CENTER_LEFT }
                     val sourceNameTextfield = textfield {
-                        prefWidth = 768.0
+                        prefWidth = 640.0
                         filterInput { it.controlNewText.isValidQualifiedName() }
                         contextMenu = controller.schemaContextMenu
                     }
@@ -78,7 +77,7 @@ class SourceFragment : Fragment() {
                         }
                     }
                     val identifierAttributesTable = tableview<DtSpecColumnIdentifierMappingViewModel> {
-                        prefHeight=512.0
+                        prefHeight = 512.0
                         prefWidth = 768.0
                         isEditable = true
                         contextMenu = controller.tableFieldContextMenu

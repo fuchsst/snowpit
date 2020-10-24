@@ -3,21 +3,46 @@ package at.willhaben.dt.snowpit.controller
 import at.willhaben.dt.snowpit.view.document.model.DtSpecFactoryViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecScenarioCaseFactoryViewModel
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
+import javafx.beans.InvalidationListener
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
-import tornadofx.*
+import tornadofx.Controller
+import tornadofx.alert
+import tornadofx.asObservable
 
 class FactoryController : Controller() {
     val dtSpecViewModel: DtSpecViewModel by inject()
 
     val selectedFactory = SimpleObjectProperty<DtSpecFactoryViewModel>()
 
-    val selectedSourceDataFactory: SimpleListProperty<DtSpecScenarioCaseFactoryViewModel>
-        get() = selectedFactory.value.dataFactoriesProperty
+    val selectedFactorySources: SimpleListProperty<DtSpecScenarioCaseFactoryViewModel>?
+        get() = selectedFactory.value?.dataFactoriesProperty
 
-    val selectedSourceDataFactoryViewModel = SimpleObjectProperty<DtSpecScenarioCaseFactoryViewModel>()
+    val selectedSource = SimpleObjectProperty<DtSpecScenarioCaseFactoryViewModel>()
+
+
+    val availableSourceNames = mutableListOf<String>().asObservable()
+
+    init {
+        val sourceListListener = InvalidationListener {
+            val currentList = dtSpecViewModel.sources.map { it.source }
+            availableSourceNames.clear()
+            availableSourceNames.addAll(currentList)
+            availableSourceNames.sorted()
+        }
+        dtSpecViewModel.sourcesProperty.addListener { _, oldItem, newItem ->
+            if (oldItem != null) {
+                oldItem.forEach { it.sourceProperty.removeListener(sourceListListener) }
+                oldItem.removeListener(sourceListListener)
+            }
+            if (newItem != null) {
+                newItem.forEach { it.sourceProperty.addListener(sourceListListener) }
+                newItem.addListener(sourceListListener)
+            }
+        }
+    }
 
     fun addFactory() {
         dtSpecViewModel.factories.add(
@@ -39,8 +64,8 @@ class FactoryController : Controller() {
             )
     }
 
-    fun addTargetFieldMapping() {
-        selectedSourceDataFactory.add(
+    fun addSource() {
+        selectedFactorySources?.add(
                 DtSpecScenarioCaseFactoryViewModel(
                         source = dtSpecViewModel.sources.firstOrNull()?.source ?: "undefined_source",
                         table = ""
@@ -48,8 +73,8 @@ class FactoryController : Controller() {
         )
     }
 
-    fun removeTargetFieldMapping() {
-        selectedSourceDataFactory.remove(selectedSourceDataFactoryViewModel.value)
+    fun removeSource() {
+        selectedFactorySources?.remove(selectedSource.value)
     }
 
 

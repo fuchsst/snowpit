@@ -4,7 +4,7 @@ import at.willhaben.dt.snowpit.service.model.dbt.DbtProfile
 import at.willhaben.dt.snowpit.service.model.dbt.DbtTarget
 import at.willhaben.dt.snowpit.view.document.model.DbtProfileViewModel
 import at.willhaben.dt.snowpit.view.document.model.DbtTargetViewModel
-import tornadofx.*
+import tornadofx.asObservable
 
 fun DbtProfile.convert() = DbtProfileViewModel(
         name = this.name,

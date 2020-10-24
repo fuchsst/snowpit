@@ -45,6 +45,7 @@ class IdentifierFragment : Fragment() {
                     paddingAll = 4.0
                     label(text = "Identifier Name: ") { alignment = Pos.CENTER_LEFT }
                     val identifierNameTextfield = textfield() {
+                        prefWidth = 640.0
                         filterInput { it.controlNewText.isValidFieldName() }
                     }
 

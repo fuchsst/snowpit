@@ -140,7 +140,8 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
                     handleRefreshTableMetadata()
                 }
             }
-            this += tabPane.apply { fitToParentSize() }
+            this += tabPane
+            tabPane.fitToParentSize()
         }
     }
 
@@ -148,7 +149,7 @@ class MainFormView : View("Snowpit - DtSpec Yaml Editor", ImageView(Icons.AppIco
         try {
             metadataController.reloadDbTableMetadata()
 
-            val numSchemas = metadataController.dbTableMetadataList.count()
+            val numSchemas = metadataController.dbTableMetadataList.map { it.schema }.distinct().count()
             val numTables = metadataController.dbTableMetadataList.count()
             val dbName = metadataController.dbTableMetadataList.first().database
 

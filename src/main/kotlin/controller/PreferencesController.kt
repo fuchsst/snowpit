@@ -2,9 +2,10 @@ package at.willhaben.dt.snowpit.controller
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
-import tornadofx.*
+import tornadofx.Controller
+import tornadofx.getValue
+import tornadofx.setValue
 
 class PreferencesController : Controller() {
 

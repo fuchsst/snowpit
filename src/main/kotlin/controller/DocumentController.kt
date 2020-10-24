@@ -1,7 +1,6 @@
 package at.willhaben.dt.snowpit.controller
 
-import javafx.scene.control.ContextMenu
-import tornadofx.*
+import tornadofx.Controller
 
 class DocumentController : Controller() {
 

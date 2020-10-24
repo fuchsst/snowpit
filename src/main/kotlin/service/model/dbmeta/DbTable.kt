@@ -6,7 +6,7 @@ data class DbTable(
         val name: String,
         val fields: MutableList<DbTableField>
 ) {
-    val qualifiedName:String
+    val qualifiedName: String
         get() = "$schema.$name"
 }
 

@@ -4,7 +4,9 @@ import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
-import tornadofx.*
+import tornadofx.ViewModel
+import tornadofx.getValue
+import tornadofx.setValue
 
 
 class DtSpecSourceViewModel(source: String,

@@ -36,11 +36,10 @@ class MetadataController : Controller() {
         if (dbtProfilesYamlFile.exists()) {
             val profiles = dbtProfilesService.loadTargetProfiles(dbtProfilesYamlFile.inputStream())
             val profile = profiles.find { it.name == preferencesController.dbtProfile }?.convert()
-            if (profile != null) {
-                dbtProfileList.removeIf { !profiles.contains(it) }
-                dbtProfileList.addAll(profiles.map { it.name }.filterNot { dbtProfileList.contains(it) })
-                dbtProfileList.sort()
-            } else {
+            dbtProfileList.removeIf { !profiles.contains(it) }
+            dbtProfileList.addAll(profiles.map { it.name }.filterNot { dbtProfileList.contains(it) })
+            dbtProfileList.sort()
+            if (profile == null) {
                 throw DbtProfileException("The configured Profile '${preferencesController.dbtProfile}' not found in '${preferencesController.dbtProfilesYamlPath}'!")
             }
         } else {
@@ -119,7 +118,7 @@ class MetadataController : Controller() {
 
     fun buildTableFieldContextMenu(qualifiedTableName: String?,
                                    targetColIdMappingProperty: SimpleObjectProperty<DtSpecColumnIdentifierMappingViewModel>?,
-                                   targetParentColIdMappingListProperty:SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>?): List<MenuItem> {
+                                   targetParentColIdMappingListProperty: SimpleListProperty<DtSpecColumnIdentifierMappingViewModel>?): List<MenuItem> {
         return dbTableMetadataList
                 .filter { it.qualifiedTableName == qualifiedTableName }
                 .flatMap {
@@ -131,7 +130,7 @@ class MetadataController : Controller() {
                                         targetParentColIdMappingListProperty?.add(
                                                 DtSpecColumnIdentifierMappingViewModel(
                                                         column = field.name.toLowerCase(),
-                                                        identifier = DtSpecIdentifierAttributeMappingViewModel(null,null)
+                                                        identifier = DtSpecIdentifierAttributeMappingViewModel(null, null)
                                                 )
                                         )
                                     }

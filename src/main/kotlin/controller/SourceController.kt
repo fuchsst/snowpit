@@ -11,7 +11,9 @@ import javafx.event.EventHandler
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.ContextMenu
-import tornadofx.*
+import tornadofx.Controller
+import tornadofx.alert
+import tornadofx.asObservable
 
 class SourceController : Controller() {
     val dtSpecViewModel: DtSpecViewModel by inject()
@@ -31,7 +33,7 @@ class SourceController : Controller() {
         this.items.addAll(metadataController.buildTableFieldContextMenu(selectedSource.value?.source, selectedIdentifierMapViewModel, selectedColumnIdentifierMapping))
         this.onShowing = EventHandler {
             this.items.clear()
-            this.items.addAll(metadataController.buildTableFieldContextMenu(selectedSource.value?.source, selectedIdentifierMapViewModel,selectedColumnIdentifierMapping))
+            this.items.addAll(metadataController.buildTableFieldContextMenu(selectedSource.value?.source, selectedIdentifierMapViewModel, selectedColumnIdentifierMapping))
 
         }
     }

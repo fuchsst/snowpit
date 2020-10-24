@@ -2,6 +2,7 @@ package at.willhaben.dt.snowpit.view
 
 import at.willhaben.dt.snowpit.controller.MetadataController
 import at.willhaben.dt.snowpit.controller.PreferencesController
+import javafx.scene.control.Alert
 import javafx.scene.image.ImageView
 import javafx.stage.FileChooser
 import tornadofx.*
@@ -13,7 +14,12 @@ class PreferencesView : View("Preferences", ImageView(Icons.IconPreferences)) {
     private val metadataController: MetadataController by inject(scope)
 
     init {
-        metadataController.reloadProfiles()
+        try {
+            metadataController.reloadProfiles()
+        } catch (e: Exception) {
+            alert(Alert.AlertType.ERROR, "Error", e.message)
+        }
+
     }
 
     override val root = form {
@@ -26,11 +32,17 @@ class PreferencesView : View("Preferences", ImageView(Icons.IconPreferences)) {
                         extensionFilters.add(FileChooser.ExtensionFilter("dbt Profile Yaml", "profiles.yml"))
                         title = "Choose dbt Profiles Yaml..."
                     }
-                    fileChooser.initialDirectory = File(File(controller.dbtProfilesYamlPath).parent)
+                    if (File(controller.dbtProfilesYamlPath).exists()) {
+                        fileChooser.initialDirectory = File(File(controller.dbtProfilesYamlPath).parent)
+                    }
                     val file = fileChooser.showOpenDialog(null)
                     if (file != null) {
                         controller.dbtProfilesYamlPath = file.absolutePath
-                        metadataController.reloadProfiles()
+                        try {
+                            metadataController.reloadProfiles()
+                        } catch (e: Exception) {
+                            alert(Alert.AlertType.ERROR, "Error", e.message)
+                        }
                     }
                 }
             }

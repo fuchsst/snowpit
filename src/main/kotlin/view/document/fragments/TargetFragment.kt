@@ -1,6 +1,5 @@
 package at.willhaben.dt.snowpit.view.document.fragments
 
-import at.willhaben.dt.snowpit.controller.SourceController
 import at.willhaben.dt.snowpit.controller.TargetController
 import at.willhaben.dt.snowpit.service.isValidQualifiedName
 import at.willhaben.dt.snowpit.view.Icons
@@ -45,7 +44,7 @@ class TargetFragment : Fragment() {
                     paddingAll = 4.0
                     label(text = "Target Table: ") { alignment = Pos.CENTER_LEFT }
                     val targetNameTextfield = textfield() {
-                        prefWidth = 768.0
+                        prefWidth = 640.0
                         filterInput { it.controlNewText.isValidQualifiedName() }
                         contextMenu = controller.schemaContextMenu
                     }
@@ -78,7 +77,7 @@ class TargetFragment : Fragment() {
                         }
                     }
                     val identifierAttributesTable = tableview<DtSpecColumnIdentifierMappingViewModel> {
-                        prefHeight=512.0
+                        prefHeight = 512.0
                         prefWidth = 768.0
                         isEditable = true
                         contextMenu = controller.tableFieldContextMenu

@@ -1,6 +1,5 @@
 package at.willhaben.dt.snowpit.view.document.fragments
 
-import at.willhaben.dt.snowpit.controller.*
 import at.willhaben.dt.snowpit.view.Icons
 import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.geometry.Side

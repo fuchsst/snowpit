@@ -3,7 +3,9 @@ package at.willhaben.dt.snowpit.view.document.model
 import javafx.beans.property.SimpleListProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.ObservableList
-import tornadofx.*
+import tornadofx.ViewModel
+import tornadofx.getValue
+import tornadofx.setValue
 
 class DbTableMetadataViewModel(
         database: String,
@@ -21,7 +23,7 @@ class DbTableMetadataViewModel(
     var name by nameProperty
     var fields by fieldsProperty
 
-    val qualifiedTableName:String
+    val qualifiedTableName: String
         get() = "${schema.toLowerCase()}.${name.toLowerCase()}"
 }
 

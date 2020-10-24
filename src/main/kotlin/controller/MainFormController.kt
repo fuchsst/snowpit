@@ -8,7 +8,9 @@ import at.willhaben.dt.snowpit.view.document.model.DtSpecViewModel
 import javafx.application.Platform
 import javafx.beans.property.SimpleStringProperty
 import javafx.stage.FileChooser
-import tornadofx.*
+import tornadofx.Controller
+import tornadofx.getValue
+import tornadofx.setValue
 import java.io.File
 
 class MainFormController : Controller() {
